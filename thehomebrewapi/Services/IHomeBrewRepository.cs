@@ -21,6 +21,8 @@ namespace thehomebrewapi.Services
 
         void DeleteIngredient(Ingredient ingredient);
 
+        void AddRecipe(Recipe recipe);
+
         bool Save();
     }
 }

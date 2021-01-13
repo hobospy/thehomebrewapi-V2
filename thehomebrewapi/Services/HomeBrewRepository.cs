@@ -68,6 +68,11 @@ namespace thehomebrewapi.Services
             _context.Ingredients.Remove(ingredient);
         }
 
+        public void AddRecipe(Recipe recipe)
+        {
+            _context.Recipes.Add(recipe);
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
