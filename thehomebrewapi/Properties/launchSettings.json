@@ -13,8 +13,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
+        }
+      },
     "thehomebrewapi": {
       "commandName": "Project",
       "launchBrowser": true,
