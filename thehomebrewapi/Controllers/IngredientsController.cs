@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,6 +115,78 @@ namespace thehomebrewapi.Controllers
 
             ingredientFromStore.Name = ingredient.Name;
             ingredientFromStore.Amount = ingredient.Amount;
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateIngredient(int recipeId, int id,
+            [FromBody] JsonPatchDocument<IngredientForUpdateDto> patchDoc)
+        {
+            var recipe = RecipesDataStore.Current.Recipes.FirstOrDefault(r => r.Id == recipeId);
+            if (recipe == null)
+            {
+                return NotFound();
+
+            }
+
+            var ingredientFromStore = recipe.Ingredients
+                .FirstOrDefault(i => i.Id == id);
+            if (ingredientFromStore == null)
+            {
+                return NotFound();
+            }
+
+            var ingredientToPatch =
+                new IngredientForUpdateDto
+                {
+                    Name = ingredientFromStore.Name,
+                    Amount = ingredientFromStore.Amount
+                };
+
+            patchDoc.ApplyTo(ingredientToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (ingredientToPatch.Amount <= 0)
+            {
+                ModelState.AddModelError(
+                    "Description",
+                    "The ingredient amount must be a value greater than 0.");
+            }
+
+            if (!TryValidateModel(ingredientToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            ingredientFromStore.Name = ingredientToPatch.Name;
+            ingredientFromStore.Amount = ingredientToPatch.Amount;
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteIngredient(int recipeId, int id)
+        {
+            var recipe = RecipesDataStore.Current.Recipes.FirstOrDefault(r => r.Id == recipeId);
+            if (recipe == null)
+            {
+                return NotFound();
+
+            }
+
+            var ingredientFromStore = recipe.Ingredients
+                .FirstOrDefault(i => i.Id == id);
+            if (ingredientFromStore == null)
+            {
+                return NotFound();
+            }
+
+            recipe.Ingredients.Remove(ingredientFromStore);
 
             return NoContent();
         }
