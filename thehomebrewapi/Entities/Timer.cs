@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Entities
 {
-    public class Ingredient
+    public class Timer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
+        public long Duration { get; set; }
 
         [Required]
-        public double Amount { get; set; }
+        public ETypeOfDuration Type { get; set; }
 
         [ForeignKey("RecipeStepId")]
         public RecipeStep RecipeStep { get; set; }

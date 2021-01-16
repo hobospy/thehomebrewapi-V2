@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Entities
 {
-    public class Ingredient
+    public class WaterProfileAddition
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,8 +17,11 @@ namespace thehomebrewapi.Entities
         [Required]
         public double Amount { get; set; }
 
-        [ForeignKey("RecipeStepId")]
-        public RecipeStep RecipeStep { get; set; }
-        public int RecipeStepId { get; set; }
+        [Required]
+        public EUnitOfMeasure Unit { get; set; }
+
+        [ForeignKey("WaterProfileId")]
+        public WaterProfile WaterProfile { get; set; }
+        public int WaterProfileId { get; set; }
     }
 }

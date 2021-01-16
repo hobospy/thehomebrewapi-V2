@@ -12,7 +12,7 @@ using thehomebrewapi.Services;
 namespace thehomebrewapi.Controllers
 {
     [ApiController]
-    [Route("api/recipes/{recipeId}/ingredients")]
+    [Route("api/recipes/{recipeId}/recipeSteps/{recipeStepId}/ingredients")]
     public class IngredientsController : ControllerBase
     {
         private readonly ILogger<IngredientsController> _logger;
@@ -30,7 +30,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetIngredients(int recipeId)
+        public IActionResult GetIngredients(int recipeId, int recipeStepId)
         {
             try
             {
@@ -74,36 +74,36 @@ namespace thehomebrewapi.Controllers
         public IActionResult CreateIngredient(int recipeId,
             [FromBody] IngredientForCreationDto ingredient)
         {
-            if (ingredient.Amount <= 0)
-            {
-                ModelState.AddModelError(
-                    "Description",
-                    "The ingredient amount must be a value greater than 0.");
-            }
+            throw new NotImplementedException();
+            //if (ingredient.Amount <= 0)
+            //{
+            //    ModelState.AddModelError(
+            //        "Description",
+            //        "The ingredient amount must be a value greater than 0.");
+            //}
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            if (!_homeBrewRepository.RecipeExists(recipeId))
-            {
-                return NotFound();
+            //if (!_homeBrewRepository.RecipeExists(recipeId))
+            //{
+            //    return NotFound();
+            //}
 
-            }
+            //var finalIngredient = _mapper.Map<Entities.Ingredient>(ingredient);
 
-            var finalIngredient = _mapper.Map<Entities.Ingredient>(ingredient);
+            //_homeBrewRepository.AddIngredientForRecipe(recipeId, finalIngredient);
 
-            _homeBrewRepository.AddIngredientForRecipe(recipeId, finalIngredient);
+            //_homeBrewRepository.Save();
 
-            _homeBrewRepository.Save();
+            //var createdIngredientToReturn = _mapper.Map<Models.IngredientDto>(finalIngredient);
 
-            var createdIngredientToReturn = _mapper.Map<Models.IngredientDto>(finalIngredient);
-
-            return CreatedAtRoute(
-                "GetIngredient",
-                new { recipeId, id = finalIngredient.Id },
-                createdIngredientToReturn);
+            //return CreatedAtRoute(
+            //    "GetIngredient",
+            //    new { recipeId, id = finalIngredient.Id },
+            //    createdIngredientToReturn);
         }
 
         [HttpPut("{id}")]

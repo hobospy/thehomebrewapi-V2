@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using thehomebrewapi.Contexts;
 
 namespace thehomebrewapi.Migrations
 {
     [DbContext(typeof(HomeBrewContext))]
-    partial class HomeBrewContextModelSnapshot : ModelSnapshot
+    [Migration("20210114093042_InitialHomeBrewDB")]
+    partial class InitialHomeBrewDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

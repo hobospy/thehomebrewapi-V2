@@ -6,10 +6,11 @@ namespace thehomebrewapi.Profiles
     {
         public RecipeProfile()
         {
-            CreateMap<Entities.Recipe, Models.RecipeWithoutIngredientsDto>().ReverseMap();
+            CreateMap<Entities.Recipe, Models.RecipeWithoutStepsDto>().ReverseMap();
             CreateMap<Entities.Recipe, Models.RecipeDto>().ReverseMap();
-            CreateMap<Models.RecipeForCreationDto, Models.RecipeWithoutIngredientsDto>();
-
+            CreateMap<Entities.Recipe, Models.RecipeForCreationDto>().ReverseMap();
+            CreateMap<Entities.Recipe, Models.RecipeForUpdateDto>().ReverseMap();
+            CreateMap<Models.RecipeForCreationDto, Models.RecipeWithoutStepsDto>();
         }
     }
 }
