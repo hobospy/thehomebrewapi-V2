@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using thehomebrewapi.Models;
 using thehomebrewapi.Services;
 
@@ -135,7 +133,6 @@ namespace thehomebrewapi.Controllers
             _mapper.Map(recipe, recipeEntity);
 
             _homeBrewRepository.UpdateRecipe(recipeEntity);
-
             _homeBrewRepository.Save();
 
             return NoContent();
@@ -190,7 +187,6 @@ namespace thehomebrewapi.Controllers
             _mapper.Map(recipeToPatch, recipeEntity);
 
             _homeBrewRepository.UpdateRecipe(recipeEntity);
-
             _homeBrewRepository.Save();
 
             return NoContent();

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace thehomebrewapi.Migrations
 {
-    public partial class InitialHomeBrewDB : Migration
+    public partial class HomeBrewInitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -67,6 +68,31 @@ namespace thehomebrewapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Brews",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    BrewDate = table.Column<DateTime>(nullable: false),
+                    BrewedState = table.Column<int>(nullable: false),
+                    BrewingNotes = table.Column<string>(maxLength: 2000, nullable: true),
+                    ABV = table.Column<double>(nullable: false),
+                    Rating = table.Column<double>(nullable: false),
+                    RecipeID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brews", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Brews_Recipes_RecipeID",
+                        column: x => x.RecipeID,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RecipeSteps",
                 columns: table => new
                 {
@@ -83,6 +109,27 @@ namespace thehomebrewapi.Migrations
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TastingNote",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Note = table.Column<string>(maxLength: 1000, nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    BrewID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TastingNote", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_TastingNote_Brews_BrewID",
+                        column: x => x.BrewID,
+                        principalTable: "Brews",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -154,6 +201,15 @@ namespace thehomebrewapi.Migrations
                 values: new object[] { 1, 300.0, "Light crystal malt", 1, 1 });
 
             migrationBuilder.InsertData(
+                table: "Brews",
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                values: new object[,]
+                {
+                    { 1, 4.2999999999999998, new DateTime(2020, 11, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "The yeast in this one didn't settle", "First Brew", 3.0, 1 },
+                    { 2, 4.0999999999999996, new DateTime(2021, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, "Gonna be better brew", 0.0, 1 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "RecipeSteps",
                 columns: new[] { "Id", "Description", "RecipeId" },
                 values: new object[,]
@@ -185,6 +241,11 @@ namespace thehomebrewapi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Brews_RecipeID",
+                table: "Brews",
+                column: "RecipeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ingredients_RecipeStepId",
                 table: "Ingredients",
                 column: "RecipeStepId");
@@ -198,6 +259,11 @@ namespace thehomebrewapi.Migrations
                 name: "IX_RecipeSteps_RecipeId",
                 table: "RecipeSteps",
                 column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TastingNote_BrewID",
+                table: "TastingNote",
+                column: "BrewID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Timers_RecipeStepId",
@@ -217,10 +283,16 @@ namespace thehomebrewapi.Migrations
                 name: "Ingredients");
 
             migrationBuilder.DropTable(
+                name: "TastingNote");
+
+            migrationBuilder.DropTable(
                 name: "Timers");
 
             migrationBuilder.DropTable(
                 name: "WaterProfileAdditions");
+
+            migrationBuilder.DropTable(
+                name: "Brews");
 
             migrationBuilder.DropTable(
                 name: "RecipeSteps");

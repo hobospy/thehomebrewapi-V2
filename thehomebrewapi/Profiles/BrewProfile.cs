@@ -12,6 +12,7 @@ namespace thehomebrewapi.Profiles
         {
             CreateMap<Entities.Brew, Models.BrewDto>().ReverseMap();
             CreateMap<Entities.Brew, Models.BrewWithoutTastingNotesDto>().ReverseMap();
+            CreateMap<Entities.Brew, Models.BrewForCreationDto>().ReverseMap();
         }
     }
 }

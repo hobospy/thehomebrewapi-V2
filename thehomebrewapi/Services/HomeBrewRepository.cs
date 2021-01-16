@@ -191,6 +191,11 @@ namespace thehomebrewapi.Services
             _context.Brews.Remove(brew);
         }
 
+        public void UpdateBrew(Brew brew)
+        {
+            _context.Brews.Update(brew);
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);

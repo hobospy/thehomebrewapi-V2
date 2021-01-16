@@ -49,11 +49,13 @@ namespace thehomebrewapi.Services
 
         IEnumerable<Brew> GetBrews();
 
-        Brew GetBrew(int brewId, bool includeTastingNotes);
+        Brew GetBrew(int brewId, bool includeTastingNotes = false);
 
         void AddBrew(Brew brew);
 
         void DeleteBrew(Brew brew);
+
+        void UpdateBrew(Brew brew);
 
         bool Save();
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using thehomebrewapi.Entities;
 using static thehomebrewapi.Entities.Enumerations;
 
@@ -192,6 +193,30 @@ namespace thehomebrewapi.Contexts
             //    Name = "Whirlfloc",
             //    Amount = 0.5
             //});
+
+            modelBuilder.Entity<Brew>()
+                .HasData(
+                    new Brew()
+                    {
+                        ID = 1,
+                        RecipeID = 1,
+                        ABV = 4.3,
+                        BrewDate = new DateTime(2020, 11, 14),
+                        BrewingNotes = "The yeast in this one didn't settle",
+                        BrewedState = EBrewedState.brewed,
+                        Name = "First Brew",
+                        Rating = 3
+                    },
+                    new Brew()
+                    {
+                        ID = 2,
+                        RecipeID = 1,
+                        ABV = 4.1,
+                        BrewDate = new DateTime(2021, 1, 19),
+                        BrewedState = EBrewedState.notBrewed,
+                        Name = "Gonna be better brew"
+                    }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

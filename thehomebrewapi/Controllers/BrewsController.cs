@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
@@ -32,7 +33,7 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<IEnumerable<BrewWithoutTastingNotesDto>>(brews));
         }
 
-        [HttpGet("{id", Name = "GetBrew")]
+        [HttpGet("{id}", Name = "GetBrew")]
         public IActionResult GetBrew(int id, bool includeTastingNotes = false)
         {
             var brew = _homebrewRepository.GetBrew(id);
@@ -83,10 +84,72 @@ namespace thehomebrewapi.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateBrew(int id, [FromBody] BrewForUpdateDto brew)
         {
-            throw new NotImplementedException();
+            if (!Enum.IsDefined(typeof(EBrewedState), brew.BrewedState))
+            {
+                ModelState.AddModelError(
+                            "Description",
+                            $"The brewed state for the {brew.Name} brew must exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var brewEntity = _homebrewRepository.GetBrew(id, true);
+            if (brewEntity == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(brew, brewEntity);
+
+            _homebrewRepository.UpdateBrew(brewEntity);
+            _homebrewRepository.Save();
+
+            return NoContent();
         }
 
-        [HttpDelete]
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateBrew(int id,
+            [FromBody] JsonPatchDocument<BrewForUpdateDto> patchDoc)
+        {
+            var brewEntity = _homebrewRepository.GetBrew(id, true);
+            if (brewEntity == null)
+            {
+                return NotFound();
+            }
+
+            var brewToPatch = _mapper.Map<BrewForUpdateDto>(brewEntity);
+
+            patchDoc.ApplyTo(brewToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!Enum.IsDefined(typeof(EBrewedState), brewToPatch.BrewedState))
+            {
+                ModelState.AddModelError(
+                            "Description",
+                            $"The brewed state for the {brewToPatch.Name} brew must exist.");
+            }
+
+            if (!TryValidateModel(brewToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            _mapper.Map(brewToPatch, brewEntity);
+
+            _homebrewRepository.UpdateBrew(brewEntity);
+            _homebrewRepository.Save();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
         public IActionResult DeleteBrew(int id)
         {
             var brewEntity = _homebrewRepository.GetBrew(id, false);

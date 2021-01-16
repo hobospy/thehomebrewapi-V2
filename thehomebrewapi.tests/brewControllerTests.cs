@@ -25,7 +25,7 @@ namespace thehomebrewapi.tests
             var mapperMock = new Mock<IMapper>();
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
 
-            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>())).Returns((Brew)null);
+            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns((Brew)null);
 
             var result = brewsController.GetBrew(invalidId);
 
@@ -51,7 +51,7 @@ namespace thehomebrewapi.tests
             var mapperMock = new Mock<IMapper>();
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
 
-            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>())).Returns(brew);
+            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns(brew);
 
             var result = brewsController.GetBrew(5);
 
@@ -94,7 +94,7 @@ namespace thehomebrewapi.tests
             var mapperMock = new Mock<IMapper>();
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
 
-            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>())).Returns(brew);
+            homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns(brew);
 
             var result = brewsController.GetBrew(5);
 
