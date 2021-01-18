@@ -30,25 +30,25 @@ namespace thehomebrewapi.Controllers
         {
             var brews = _homebrewRepository.GetBrews();
 
-            return Ok(_mapper.Map<IEnumerable<BrewWithoutTastingNotesDto>>(brews));
+            return Ok(_mapper.Map<IEnumerable<BrewWithoutAdditionalInfoDto>>(brews));
         }
 
         [HttpGet("{id}", Name = "GetBrew")]
-        public IActionResult GetBrew(int id, bool includeTastingNotes = false)
+        public IActionResult GetBrew(int id, bool includeAdditionalInfo = false)
         {
-            var brew = _homebrewRepository.GetBrew(id);
+            var brew = _homebrewRepository.GetBrew(id, includeAdditionalInfo);
 
             if (brew == null)
             {
                 return NotFound();
             }
 
-            if (includeTastingNotes)
+            if (includeAdditionalInfo)
             {
                 return Ok(_mapper.Map<BrewDto>(brew));
             }
 
-            return Ok(_mapper.Map<BrewWithoutTastingNotesDto>(brew));
+            return Ok(_mapper.Map<BrewWithoutAdditionalInfoDto>(brew));
         }
 
         [HttpPost]
@@ -57,8 +57,35 @@ namespace thehomebrewapi.Controllers
             if (!Enum.IsDefined(typeof(EBrewedState), brew.BrewedState))
             {
                 ModelState.AddModelError(
-                            "Description",
-                            $"The brewed state for the {brew.Name} brew must exist.");
+                            "Invalid brewed state",
+                            $"The brewed state [{brew.BrewedState}] for the {brew.Name} brew must exist.");
+            }
+
+            if (brew.RecipeId <= 0 || !_homebrewRepository.RecipeExists(brew.RecipeId))
+            {
+                ModelState.AddModelError(
+                            "Recipe ID",
+                            $"The associated recipe id [{brew.RecipeId}] for the {brew.Name} brew must be valid.");
+            }
+
+            var nullDateTime = new DateTime(1, 1, 1, 0, 0, 0);
+            if (brew.BrewedState != 0 && brew.BrewDate == nullDateTime)
+            {
+                ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The brew date [{brew.BrewDate}] for the {brew.Name} brew must be valid.");
+            }
+
+            foreach (var note in brew.TastingNotes)
+            {
+                if (note.Date == nullDateTime)
+                {
+                    var noteId = note.Note.Length > 50 ? note.Note.Substring(0, 50) + "..." : note.Note;
+
+                    ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The tasting note date [{note.Date}] for the {noteId} tasting note must be valid.");
+                }
             }
 
             if (!ModelState.IsValid)
@@ -69,6 +96,8 @@ namespace thehomebrewapi.Controllers
             var finalBrew = _mapper.Map<Entities.Brew>(brew);
 
             _homebrewRepository.AddBrew(finalBrew);
+            finalBrew.Recipe = _homebrewRepository.GetRecipe(brew.RecipeId, true);
+
             _homebrewRepository.Save();
 
             var createdBrewToReturn = _mapper.Map<Models.BrewDto>(finalBrew);
@@ -87,8 +116,35 @@ namespace thehomebrewapi.Controllers
             if (!Enum.IsDefined(typeof(EBrewedState), brew.BrewedState))
             {
                 ModelState.AddModelError(
-                            "Description",
-                            $"The brewed state for the {brew.Name} brew must exist.");
+                            "Invalid brewed state",
+                            $"The brewed state [{brew.BrewedState}] for the {brew.Name} brew must exist.");
+            }
+
+            if (brew.RecipeId <= 0 || !_homebrewRepository.RecipeExists(brew.RecipeId))
+            {
+                ModelState.AddModelError(
+                            "Recipe ID",
+                            $"The associated recipe id [{brew.RecipeId}] for the {brew.Name} brew must be valid.");
+            }
+
+            var nullDateTime = new DateTime(1, 1, 1, 0, 0, 0);
+            if (brew.BrewedState != 0 && brew.BrewDate == nullDateTime)
+            {
+                ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The brew date [{brew.BrewDate}] for the {brew.Name} brew must be valid.");
+            }
+
+            foreach (var note in brew.TastingNotes)
+            {
+                if (note.Date == nullDateTime)
+                {
+                    var noteId = note.Note.Length > 50 ? note.Note.Substring(0, 50) + "..." : note.Note;
+
+                    ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The tasting note date [{note.Date}] for the {noteId} tasting note must be valid.");
+                }
             }
 
             if (!ModelState.IsValid)
@@ -132,8 +188,35 @@ namespace thehomebrewapi.Controllers
             if (!Enum.IsDefined(typeof(EBrewedState), brewToPatch.BrewedState))
             {
                 ModelState.AddModelError(
-                            "Description",
-                            $"The brewed state for the {brewToPatch.Name} brew must exist.");
+                            "Invalid brewed state",
+                            $"The brewed state [{brewToPatch.BrewedState}] for the {brewToPatch.Name} brew must exist.");
+            }
+
+            if (brewToPatch.RecipeId <= 0 || !_homebrewRepository.RecipeExists(brewToPatch.RecipeId))
+            {
+                ModelState.AddModelError(
+                            "Recipe ID",
+                            $"The associated recipe id [{brewToPatch.RecipeId}] for the {brewToPatch.Name} brew must be valid.");
+            }
+
+            var nullDateTime = new DateTime(1, 1, 1, 0, 0, 0);
+            if (brewToPatch.BrewedState != 0 && brewToPatch.BrewDate == nullDateTime)
+            {
+                ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The brew date [{brewToPatch.BrewDate}] for the {brewToPatch.Name} brew must be valid.");
+            }
+
+            foreach (var note in brewToPatch.TastingNotes)
+            {
+                if (note.Date == nullDateTime)
+                {
+                    var noteId = note.Note.Length > 50 ? note.Note.Substring(0, 50) + "..." : note.Note;
+
+                    ModelState.AddModelError(
+                            "Tasting note date",
+                            $"The tasting note date [{note.Date}] for the {noteId} tasting note must be valid.");
+                }
             }
 
             if (!TryValidateModel(brewToPatch))

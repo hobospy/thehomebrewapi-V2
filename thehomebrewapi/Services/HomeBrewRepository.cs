@@ -16,18 +16,30 @@ namespace thehomebrewapi.Services
             _context = context ?? throw new NullArgumentException(nameof(context));
         }
 
-        public Ingredient GetIngredientForRecipe(int recipeId, int ingredientId)
-        {
-            throw new NotImplementedException();
-            //return _context.Ingredients
-            //    .Where(i => i.RecipeId == recipeId && i.Id == ingredientId).FirstOrDefault();
-        }
-
         public IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId)
         {
-            throw new NotImplementedException();
-            //return _context.Ingredients
-            //    .Where(i => i.RecipeId == recipeId).ToList();
+            var recipe = _context.Recipes.Include(r => r.Steps).FirstOrDefault(r => r.Id == recipeId);
+
+            var ingredients = new List<Ingredient>();
+
+            foreach(var step in recipe.Steps)
+            {
+                ingredients.AddRange(_context.Ingredients.Where(i => i.RecipeStepId == step.Id).ToList());
+            }
+
+            return ingredients;
+        }
+
+        public Ingredient GetIngredientForRecipeStep(int stepId, int ingredientId)
+        {
+            return _context.Ingredients
+                .Where(i => i.RecipeStepId == stepId && i.Id == ingredientId).FirstOrDefault();
+        }
+
+        public IEnumerable<Ingredient> GetIngredientsForRecipeStep(int stepId)
+        {
+            return _context.Ingredients
+                .Where(i => i.RecipeStepId == stepId).ToList();
         }
 
         public Recipe GetRecipe(int recipeId, bool includeSteps)
@@ -57,6 +69,11 @@ namespace thehomebrewapi.Services
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
 
+        public bool RecipeStepExists(int stepId)
+        {
+            return _context.RecipeSteps.Any(rs => rs.Id == stepId);
+        }
+
         public bool WaterProfileExists(int waterProfileId)
         {
             return _context.WaterProfiles.Any(wp => wp.Id == waterProfileId);
@@ -67,16 +84,16 @@ namespace thehomebrewapi.Services
             return _context.RecipeSteps.Any(rs => rs.RecipeId == recipeId && rs.Id == recipeStepId);
         }
 
-        public void AddIngredientForRecipeStep(int recipeId, int recipeStepId, Ingredient ingredient)
+        public void AddIngredientForRecipeStep(int stepId, Ingredient ingredient)
         {
-            var recipeStep = GetStepForRecipe(recipeId, recipeStepId);
+            var recipeStep = GetRecipeStep(stepId);
 
             recipeStep.Ingredients.Add(ingredient);
         }
 
-        public void UpdateIngredientForRecipe(int recipeId, Ingredient ingredient)
+        public void UpdateIngredient(Ingredient ingredient)
         {
-            throw new NotImplementedException();
+            _context.Ingredients.Update(ingredient);
         }
 
         public void DeleteIngredient(Ingredient ingredient)
@@ -108,10 +125,10 @@ namespace thehomebrewapi.Services
                 .Where(rs => rs.RecipeId == recipeId).ToList();
         }
 
-        public RecipeStep GetStepForRecipe(int recipeId, int stepId)
+        public RecipeStep GetRecipeStep(int stepId)
         {
             return _context.RecipeSteps
-                .Where(rs => rs.RecipeId == recipeId && rs.Id == stepId).FirstOrDefault();
+                .Where(rs => rs.Id == stepId).FirstOrDefault();
         }
 
         public void AddStepForRecipe(int recipeId, RecipeStep recipeStep)
@@ -122,7 +139,7 @@ namespace thehomebrewapi.Services
 
         public void AddTimerForRecipeStep(int recipeId, int stepId, Timer timer)
         {
-            var recipeStep = GetStepForRecipe(recipeId, stepId);
+            var recipeStep = GetRecipeStep(stepId);
             recipeStep.Timer = timer;
         }
 
@@ -169,13 +186,15 @@ namespace thehomebrewapi.Services
             return _context.Brews.OrderBy(b => b.BrewDate).ToList();
         }
 
-        public Brew GetBrew(int brewId, bool includeTastingNotes = false)
+        public Brew GetBrew(int brewId, bool includeAdditionalInfo = false)
         {
-            if (includeTastingNotes)
+            if (includeAdditionalInfo)
             {
-                return _context.Brews
-                    .Include(b => b.TastingNotes)
-                    .FirstOrDefault(b => b.ID == brewId);
+                return _context.Brews.Include(b => b.TastingNotes)
+                                     .Include(b => b.Recipe.Steps).ThenInclude(s => s.Ingredients)
+                                     .Include(b => b.Recipe.Steps).ThenInclude(s => s.Timer)
+                                     .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions)
+                                     .FirstOrDefault(b => b.ID == brewId);
             }
             return _context.Brews
                 .FirstOrDefault(b => b.ID == brewId);

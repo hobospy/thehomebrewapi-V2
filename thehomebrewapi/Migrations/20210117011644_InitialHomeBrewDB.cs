@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace thehomebrewapi.Migrations
 {
-    public partial class HomeBrewInitialMigration : Migration
+    public partial class InitialHomeBrewDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,14 +79,14 @@ namespace thehomebrewapi.Migrations
                     BrewingNotes = table.Column<string>(maxLength: 2000, nullable: true),
                     ABV = table.Column<double>(nullable: false),
                     Rating = table.Column<double>(nullable: false),
-                    RecipeID = table.Column<int>(nullable: false)
+                    RecipeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brews", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Brews_Recipes_RecipeID",
-                        column: x => x.RecipeID,
+                        name: "FK_Brews_Recipes_RecipeId",
+                        column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -202,7 +202,7 @@ namespace thehomebrewapi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Brews",
-                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeId" },
                 values: new object[,]
                 {
                     { 1, 4.2999999999999998, new DateTime(2020, 11, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "The yeast in this one didn't settle", "First Brew", 3.0, 1 },
@@ -241,9 +241,9 @@ namespace thehomebrewapi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Brews_RecipeID",
+                name: "IX_Brews_RecipeId",
                 table: "Brews",
-                column: "RecipeID");
+                column: "RecipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredients_RecipeStepId",

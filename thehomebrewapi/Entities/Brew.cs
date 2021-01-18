@@ -31,8 +31,8 @@ namespace thehomebrewapi.Entities
 
         public double Rating { get; set; } = 0.0;
 
-        [ForeignKey("RecipeID")]
+        [ForeignKey("RecipeId")]
         public Recipe Recipe { get; set; }
-        public int RecipeID { get; set; }
+        public int RecipeId { get; set; }
     }
 }

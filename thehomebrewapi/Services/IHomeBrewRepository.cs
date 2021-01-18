@@ -11,15 +11,19 @@ namespace thehomebrewapi.Services
 
         IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId);
 
-        Ingredient GetIngredientForRecipe(int recipeId, int ingredientId);
+        IEnumerable<Ingredient> GetIngredientsForRecipeStep(int stepId);
+
+        Ingredient GetIngredientForRecipeStep(int stepId, int ingredientId);
 
         bool RecipeExists(int recipeId);
 
+        bool RecipeStepExists(int stepId);
+
         bool WaterProfileExists(int waterProfileId);
 
-        public void AddIngredientForRecipeStep(int recipeId, int recipeStepId, Ingredient ingredient);
+        public void AddIngredientForRecipeStep(int recipeStepId, Ingredient ingredient);
 
-        void UpdateIngredientForRecipe(int recipeId, Ingredient ingredient);
+        void UpdateIngredient(Ingredient ingredient);
 
         void DeleteIngredient(Ingredient ingredient);
 
@@ -29,7 +33,7 @@ namespace thehomebrewapi.Services
 
         IEnumerable<RecipeStep> GetStepsForRecipe(int recipeId, bool includeIngredients);
 
-        RecipeStep GetStepForRecipe(int recipeId, int stepId);
+        RecipeStep GetRecipeStep(int stepId);
 
         void AddStepForRecipe(int recipeId, RecipeStep recipeStep);
 
@@ -49,7 +53,7 @@ namespace thehomebrewapi.Services
 
         IEnumerable<Brew> GetBrews();
 
-        Brew GetBrew(int brewId, bool includeTastingNotes = false);
+        Brew GetBrew(int brewId, bool includeAdditionalInfo = false);
 
         void AddBrew(Brew brew);
 

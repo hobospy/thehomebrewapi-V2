@@ -2,7 +2,7 @@
 
 namespace thehomebrewapi.Models
 {
-    public class BrewWithoutTastingNotesDto
+    public class BrewWithoutAdditionalInfoDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -50,7 +50,7 @@ namespace thehomebrewapi.Controllers
                 return NotFound();
             }
 
-            var recipeStep = _homeBrewRepository.GetStepForRecipe(recipeId, id);
+            var recipeStep = _homeBrewRepository.GetRecipeStep(id);
             if (recipeStep == null)
             {
                 return NotFound();

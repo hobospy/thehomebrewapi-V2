@@ -158,48 +158,13 @@ namespace thehomebrewapi.Contexts
                         Name = "Light crystal malt",
                         Amount = 150
                     });
-            //new Ingredient()
-            //{
-            //    Id = 4,
-            //    RecipeId = 2,
-            //    Name = "Dark roast malt",
-            //    Amount = 300
-            //},
-            //new Ingredient()
-            //{
-            //    Id = 5,
-            //    RecipeId = 2,
-            //    Name = "Bittering",
-            //    Amount = 60
-            //},
-            //new Ingredient()
-            //{
-            //    Id = 6,
-            //    RecipeId = 3,
-            //    Name = "Dark crystal",
-            //    Amount = 120
-            //},
-            //new Ingredient()
-            //{
-            //    Id = 7,
-            //    RecipeId = 3,
-            //    Name = "Rice husks",
-            //    Amount = 300
-            //},
-            //new Ingredient()
-            //{
-            //    Id = 8,
-            //    RecipeId = 3,
-            //    Name = "Whirlfloc",
-            //    Amount = 0.5
-            //});
 
             modelBuilder.Entity<Brew>()
                 .HasData(
                     new Brew()
                     {
                         ID = 1,
-                        RecipeID = 1,
+                        RecipeId = 1,
                         ABV = 4.3,
                         BrewDate = new DateTime(2020, 11, 14),
                         BrewingNotes = "The yeast in this one didn't settle",
@@ -210,7 +175,7 @@ namespace thehomebrewapi.Contexts
                     new Brew()
                     {
                         ID = 2,
-                        RecipeID = 1,
+                        RecipeId = 1,
                         ABV = 4.1,
                         BrewDate = new DateTime(2021, 1, 19),
                         BrewedState = EBrewedState.notBrewed,

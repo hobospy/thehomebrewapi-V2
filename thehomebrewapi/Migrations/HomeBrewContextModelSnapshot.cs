@@ -47,12 +47,12 @@ namespace thehomebrewapi.Migrations
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
-                    b.Property<int>("RecipeID")
+                    b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("RecipeID");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("Brews");
 
@@ -66,7 +66,7 @@ namespace thehomebrewapi.Migrations
                             BrewingNotes = "The yeast in this one didn't settle",
                             Name = "First Brew",
                             Rating = 3.0,
-                            RecipeID = 1
+                            RecipeId = 1
                         },
                         new
                         {
@@ -76,7 +76,7 @@ namespace thehomebrewapi.Migrations
                             BrewedState = 0,
                             Name = "Gonna be better brew",
                             Rating = 0.0,
-                            RecipeID = 1
+                            RecipeId = 1
                         });
                 });
 
@@ -390,7 +390,7 @@ namespace thehomebrewapi.Migrations
                 {
                     b.HasOne("thehomebrewapi.Entities.Recipe", "Recipe")
                         .WithMany()
-                        .HasForeignKey("RecipeID")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

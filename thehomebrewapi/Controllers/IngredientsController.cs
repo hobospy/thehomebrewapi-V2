@@ -29,6 +29,28 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
+        [HttpGet("/api/recipes/{recipesId}/ingredients")]
+        public IActionResult GetFullRecipeIngredients(int recipesId)
+        {
+            try
+            {
+                if (!_homeBrewRepository.RecipeExists(recipesId))
+                {
+                    _logger.LogInformation($"Recipe with id {recipesId} wasn't found when accessing ingredients");
+
+                    return NotFound();
+                }
+                var ingredientsForRecipe = _homeBrewRepository.GetIngredientsForRecipe(recipesId);
+
+                return Ok(_mapper.Map<IEnumerable<IngredientDto>>(ingredientsForRecipe));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception while getting ingredients for recipe with id {recipesId}.", ex);
+                return StatusCode(500, "A problem happened while handling your request.");
+            }
+        }
+
         [HttpGet]
         public IActionResult GetIngredients(int recipeId, int recipeStepId)
         {
@@ -40,19 +62,27 @@ namespace thehomebrewapi.Controllers
 
                     return NotFound();
                 }
-                var ingredientsForRecipe = _homeBrewRepository.GetIngredientsForRecipe(recipeId);
+
+                if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+                {
+                    _logger.LogInformation($"Recipe step with id {recipeStepId} wasn't found when accessing ingredients");
+
+                    return NotFound();
+                }
+
+                var ingredientsForRecipe = _homeBrewRepository.GetIngredientsForRecipeStep(recipeStepId);
                 
                 return Ok(_mapper.Map<IEnumerable<IngredientDto>>(ingredientsForRecipe));
             }
             catch (Exception ex)
             {
-                _logger.LogCritical($"Exception while getting ingredients for recipe with id {recipeId}.", ex);
+                _logger.LogCritical($"Exception while getting ingredients for recipe step with id {recipeStepId}.", ex);
                 return StatusCode(500, "A problem happened while handling your request.");
             }
         }
 
         [HttpGet("{id}", Name = "GetIngredient")]
-        public IActionResult GetIngredient(int recipeId, int id)
+        public IActionResult GetIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
@@ -61,7 +91,14 @@ namespace thehomebrewapi.Controllers
                 return NotFound();
             }
 
-            var ingredient = _homeBrewRepository.GetIngredientForRecipe(recipeId, id);
+            if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+            {
+                _logger.LogInformation($"Recipe step with id {recipeStepId} wasn't found when accessing ingredients");
+
+                return NotFound();
+            }
+
+            var ingredient = _homeBrewRepository.GetIngredientForRecipeStep(recipeStepId, id);
             if (ingredient == null)
             {
                 return NotFound();
@@ -71,43 +108,42 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateIngredient(int recipeId,
+        public IActionResult CreateIngredient(int recipeStepId,
             [FromBody] IngredientForCreationDto ingredient)
         {
-            throw new NotImplementedException();
-            //if (ingredient.Amount <= 0)
-            //{
-            //    ModelState.AddModelError(
-            //        "Description",
-            //        "The ingredient amount must be a value greater than 0.");
-            //}
+            if (ingredient.Amount <= 0)
+            {
+                ModelState.AddModelError(
+                    "Description",
+                    "The ingredient amount must be a value greater than 0.");
+            }
 
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            //if (!_homeBrewRepository.RecipeExists(recipeId))
-            //{
-            //    return NotFound();
-            //}
+            if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+            {
+                return NotFound();
+            }
 
-            //var finalIngredient = _mapper.Map<Entities.Ingredient>(ingredient);
+            var finalIngredient = _mapper.Map<Entities.Ingredient>(ingredient);
 
-            //_homeBrewRepository.AddIngredientForRecipe(recipeId, finalIngredient);
+            _homeBrewRepository.AddIngredientForRecipeStep(recipeStepId, finalIngredient);
 
-            //_homeBrewRepository.Save();
+            _homeBrewRepository.Save();
 
-            //var createdIngredientToReturn = _mapper.Map<Models.IngredientDto>(finalIngredient);
+            var createdIngredientToReturn = _mapper.Map<Models.IngredientDto>(finalIngredient);
 
-            //return CreatedAtRoute(
-            //    "GetIngredient",
-            //    new { recipeId, id = finalIngredient.Id },
-            //    createdIngredientToReturn);
+            return CreatedAtRoute(
+                "GetIngredient",
+                new { recipeStepId, id = finalIngredient.Id },
+                createdIngredientToReturn);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateIngredient(int recipeId, int id,
+        public IActionResult UpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] IngredientForUpdateDto ingredient)
         {
             if (ingredient.Amount <= 0)
@@ -125,11 +161,15 @@ namespace thehomebrewapi.Controllers
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
                 return NotFound();
+            }
 
+            if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+            {
+                return NotFound();
             }
 
             var ingredientEntity = _homeBrewRepository
-                .GetIngredientForRecipe(recipeId, id);
+                .GetIngredientForRecipeStep(recipeStepId, id);
             if (ingredientEntity == null)
             {
                 return NotFound();
@@ -137,7 +177,7 @@ namespace thehomebrewapi.Controllers
 
             _mapper.Map(ingredient, ingredientEntity);
 
-            _homeBrewRepository.UpdateIngredientForRecipe(recipeId, ingredientEntity);
+            _homeBrewRepository.UpdateIngredient(ingredientEntity);
 
             _homeBrewRepository.Save();
 
@@ -145,16 +185,20 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateIngredient(int recipeId, int id,
+        public IActionResult PartiallyUpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] JsonPatchDocument<IngredientForUpdateDto> patchDoc)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
                 return NotFound();
-
             }
 
-            var ingredientEntity = _homeBrewRepository.GetIngredientForRecipe(recipeId, id);
+            if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+            {
+                return NotFound();
+            }
+
+            var ingredientEntity = _homeBrewRepository.GetIngredientForRecipeStep(recipeStepId, id);
             if (ingredientEntity == null)
             {
                 return NotFound();
@@ -183,7 +227,7 @@ namespace thehomebrewapi.Controllers
 
             _mapper.Map(ingredientToPatch, ingredientEntity);
 
-            _homeBrewRepository.UpdateIngredientForRecipe(recipeId, ingredientEntity);
+            _homeBrewRepository.UpdateIngredient(ingredientEntity);
 
             _homeBrewRepository.Save();
 
@@ -191,15 +235,19 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteIngredient(int recipeId, int id)
+        public IActionResult DeleteIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
                 return NotFound();
-
             }
 
-            var ingredientEntity = _homeBrewRepository.GetIngredientForRecipe(recipeId, id);
+            if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
+            {
+                return NotFound();
+            }
+
+            var ingredientEntity = _homeBrewRepository.GetIngredientForRecipeStep(recipeStepId, id);
             if (ingredientEntity == null)
             {
                 return NotFound();

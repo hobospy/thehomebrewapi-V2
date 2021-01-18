@@ -13,5 +13,6 @@ namespace thehomebrewapi.Models
         public double ABV { get; set; }
         public double Rating { get; set; } = 0.0;
         public ICollection<TastingNoteDto> TastingNotes { get; set; } = new List<TastingNoteDto>();
+        public RecipeDto Recipe { get; set; }
     }
 }

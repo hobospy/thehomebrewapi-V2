@@ -11,6 +11,8 @@ namespace thehomebrewapi.Profiles
         public TastingNoteProfile()
         {
             CreateMap<Entities.TastingNote, Models.TastingNoteDto>();
+            CreateMap<Entities.TastingNote, Models.TastingNoteForCreationDto>().ReverseMap();
+            CreateMap<Entities.TastingNote, Models.TastingNoteForUpdateDto>().ReverseMap();
         }
     }
 }
