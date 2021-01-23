@@ -1,0 +1,4054 @@
+{
+	"info": {
+		"_postman_id": "7d807b37-5d92-4dd5-a810-dd61439b960e",
+		"name": "theHomeBrewAPI",
+		"description": "Collection of calls used to test the homebrew api.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "Post",
+					"item": [
+						{
+							"name": "Post Recipe (required field only)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"waterProfileId\": \"1\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (all fields except steps)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (all fields)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (missing water profile)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (long name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe with an exceptionally long name value that will fail\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (long description)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (long step description)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (including ingredient with long name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient with an exceptionally long name value that will fail\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (including ingredient with invalid amount)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"0\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Recipe (can't deserialize)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:59607/api/recipes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Put",
+					"item": [
+						{
+							"name": "Put Recipe (required field only)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"waterProfileId\": \"1\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (all fields except steps)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (all fields)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (missing water profile)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (long name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe with an exceptionally long name value that will fail\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (long description)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (long step description)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (including ingredient with long name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient with an exceptionally long name value that will fail\", \"amount\": \"2\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (including ingredient with invalid amount)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New recipe\",\r\n    \"description\": \"New description\",\r\n    \"type\": \"5\",\r\n    \"expectedABV\": \"2.1\",\r\n    \"favourite\": \"true\",\r\n    \"waterProfileId\": \"1\",\r\n    \"steps\" : [\r\n        {\r\n            \"description\": \"Mash in the grain\",\r\n            \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"New ingredient 1\", \"amount\": \"0\"},\r\n                { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\r\n                { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\r\n                ]\r\n        },\r\n        {\r\n            \"description\": \"Wait for wort to boil\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Recipe (can't deserialize)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Patch",
+					"item": [
+						{
+							"name": "Patch Recipe (name)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (name and description)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/description\",\r\n        \"value\": \"New description\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (add step to end of array)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/steps/-\",\r\n        \"value\": {\r\n            \"description\": \"Add whirlfloc and yeast nutrient\",\r\n            \"timer\" : { \"duration\": \"15\", \"type\": \"1\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"Yeast nutrient\", \"amount\": \"15\" }\r\n            ]\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (insert step at valid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/steps/2\",\r\n        \"value\": {\r\n            \"description\": \"Add whirlfloc and yeast nutrient\",\r\n            \"timer\" : { \"duration\": \"15\", \"type\": \"1\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"Yeast nutrient\", \"amount\": \"15\" }\r\n            ]\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (insert step at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/steps/12\",\r\n        \"value\": {\r\n            \"description\": \"Add whirlfloc and yeast nutrient\",\r\n            \"timer\" : { \"duration\": \"15\", \"type\": \"1\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"Yeast nutrient\", \"amount\": \"15\" }\r\n            ]\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (replace step)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/steps/0\",\r\n        \"value\": {\r\n            \"description\": \"Add whirlfloc and yeast nutrient\",\r\n            \"timer\" : { \"duration\": \"15\", \"type\": \"1\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"Yeast nutrient\", \"amount\": \"15\" }\r\n            ]\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (replace step at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/steps/10\",\r\n        \"value\": {\r\n            \"description\": \"Add whirlfloc and yeast nutrient\",\r\n            \"timer\" : { \"duration\": \"15\", \"type\": \"1\" },\r\n            \"ingredients\" : [\r\n                { \"name\": \"Yeast nutrient\", \"amount\": \"15\" }\r\n            ]\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (remove step)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/steps/0\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (remove step at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/steps/10\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (type)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/type\",\r\n        \"value\": \"12\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (expected ABV)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/expectedABV\",\r\n        \"value\": \"7.8\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (favourite)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/favourite\",\r\n        \"value\": \"false\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Recipe (water profile id)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/waterProfileId\",\r\n        \"value\": \"2\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/recipes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"recipes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Recipes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe (include steps)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1?includeSteps=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							],
+							"query": [
+								{
+									"key": "includeSteps",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Recipe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Recipe (invalid recipe)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ingredients",
+			"item": [
+				{
+					"name": "Get Ingredients",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ingredients (unexisting recipe step)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/recipeSteps/12/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"recipeSteps",
+								"12",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ingredient",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ingredient (unexisting recipe)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/10/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"10",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ingredient (unexisting recipe step)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/20/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"20",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ingredient (unexisting ingredient)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Ingredient",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Light crystal malt\",\n\t\"amount\": 200\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/1/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"1",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Ingredient (can't deserialize)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Ingredient (long name, missing amount, invalid property)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"This is a ridiculously long name for an ingredient that we can't possibly accept\",\n\t\"invalidProperty\": 7\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/1/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"1",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Ingredient (amount equal to zero)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"ValidName\",\n\t\"amount\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/1/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"1",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Ingredient",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Rice husks\",\n\t\"amount\":150\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Ingredient (no name)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"amount\":150\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Ingredient",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"Rice huskies\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Ingredient (multiple updates)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"Rice huskies\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/amount\",\r\n        \"value\": \"10\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Ingredient (invalid property)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/invalidProperty\",\r\n        \"value\": \"An alternative value\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Ingredient (remove name)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/name\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ingredient",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe Ingredients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"ingredients"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Steps",
+			"item": [
+				{
+					"name": "Get RecipeSteps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get RecipeSteps (include ingredients)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps?includeingredients=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps"
+							],
+							"query": [
+								{
+									"key": "includeingredients",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get RecipeStep",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post RecipeStep",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"Mash in the grain\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/2/recipeSteps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"2",
+								"recipeSteps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post RecipeStep (including timer)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"Mash in the grain\",\n    \"timer\" : { \"duration\": \"5\", \"type\": \"0\" }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/2/recipeSteps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"2",
+								"recipeSteps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post RecipeStep (including timer and ingredients)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"Mash in the grain\",\n    \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\n    \"ingredients\" : [\n        { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\n        { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\n        { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/2/recipeSteps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"2",
+								"recipeSteps"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Water Profiles",
+			"item": [
+				{
+					"name": "Post",
+					"item": [
+						{
+							"name": "Post Water Profile (name only)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (name and description)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (all fields)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (missing name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (long name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (long description)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (missing addition name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (missing addition amount)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (long addition name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition with an incredibly long name that is invalid\", \"amount\": \"12.5\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Put",
+					"item": [
+						{
+							"name": "Put Water Profile (name only)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (name and description)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Updated water profile description\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (all fields)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Updated water profile description\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition\", \"amount\": \"20\", \"unit\": \"3\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (long name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile with an exceptionally long name value that will fail\",\r\n    \"description\": \"Updated water profile description\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition\", \"amount\": \"20\", \"unit\": \"3\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (long description)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Rum Jack Tar nipper hail-shot Admiral of the Black reef deadlights hornswaggle chase take a caulk. Parrel hang the jib bilge rat schooner grapple list ye belaying pin starboard shrouds. Killick provost hang the jib piracy scuttle jolly boat grapple driver swing the lead boom. Belaying pin lugger lee Cat o'nine tails killick hornswaggle parrel tackle boatswain clipper. Blow the man down bilge barque weigh anchor galleon yardarm handsomely matey. Line overhaul Barbary Coast coffer fer square-rigged\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition\", \"amount\": \"20\", \"unit\": \"3\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (long addition name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Updated water profile description\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition with an exceptionally long name value that will fail\", \"amount\": \"20\", \"unit\": \"3\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (missing amount)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Updated water profile description\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition\", \"unit\": \"3\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (incorrect unit)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updatd water profile\",\r\n    \"description\": \"Updated water profile description\",\r\n    \"additions\": [\r\n        { \"name\": \"Updated addition 1\", \"amount\": \"20\", \"unit\": \"30\" },\r\n        { \"name\": \"Updated addition 2\", \"amount\": \"20\", \"unit\": \"35\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Water Profile (can't deserialize)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Patch",
+					"item": [
+						{
+							"name": "Patch Water Profile (replace name)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (replace name and description)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/description\",\r\n        \"value\": \"New description\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (add addition to end of array)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/additions/-\",\r\n        \"value\": {\r\n            \"name\": \"New addition\",\r\n            \"amount\": \"10.4\",\r\n            \"unit\": \"100\"\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (insert addition at valid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/additions/0\",\r\n        \"value\": {\r\n            \"name\": \"New addition\",\r\n            \"amount\": \"10.4\",\r\n            \"unit\": \"101\"\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (insert addition at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/additions/10\",\r\n        \"value\": {\r\n            \"name\": \"New addition\",\r\n            \"amount\": \"10.4\",\r\n            \"unit\": \"101\"\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (replace addition)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/additions/0\",\r\n        \"value\": {\r\n            \"name\": \"Replaced addition\",\r\n            \"amount\": \"321\",\r\n            \"unit\": \"101\"\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (replace addition at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/additions/10\",\r\n        \"value\": {\r\n            \"name\": \"Replaced addition\",\r\n            \"amount\": \"321\",\r\n            \"unit\": \"101\"\r\n        }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (remove addition)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/additions/0\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Water Profile (remove addition at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/additions/10\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Water Profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/waterProfiles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"waterProfiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Water Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/waterProfiles/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"waterProfiles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Water Profile (include additions)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/waterProfiles/1?IncludeAdditions=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"waterProfiles",
+								"1"
+							],
+							"query": [
+								{
+									"key": "IncludeAdditions",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Water Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/waterProfiles/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"waterProfiles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Water Profile (invalid water profile)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/waterProfiles/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"waterProfiles",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Brews",
+			"item": [
+				{
+					"name": "Post",
+					"item": [
+						{
+							"name": "Post Brew (required fields only)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewedState\": \"0\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (all fields)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long name)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New brew profile with an incredibly long name that is invalid\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing recipe ID)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (invalid recipe ID)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"13\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (invalid brewed state)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"7\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long brewing notes)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"Shiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat a sutler walk the plank Pirate Round quarterdeck pounders crack Jennys tea cup. Fore chandler square-rigged.\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing tasting note)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing tasting note date)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long tasting note)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Shiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat ye sutler walk the plank ye jolly Pirate.\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Put",
+					"item": [
+						{
+							"name": "Post Brew (required fields only)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewedState\": \"0\"\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (all fields)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"updated brew\",\r\n    \"recipeId\": \"2\",\r\n    \"brewDate\": \"2021-01-15\",\r\n    \"brewedState\": \"1\",\r\n    \"brewingNotes\": \"Amended brewing notes\",\r\n    \"aBV\": \"5.1\",\r\n    \"rating\": \"4\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" },\r\n        { \"note\": \"Tasting note 3\", \"date\": \"2021-01-17\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long name)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New brew profile with an incredibly long name that is invalid\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing recipe ID)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (invalid recipe ID)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"13\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (invalid brewed state)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"7\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long brewing notes)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"Shiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat a sutler walk the plank Pirate Round quarterdeck pounders crack Jennys tea cup. Fore chandler square-rigged.\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing tasting note)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (missing tasting note date)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Brew (long tasting note)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Shiver me timbers jolly boat ye sutler walk the plank Pirate Round quarterdeck six pounders topmast crack Jennys tea cup. Fore chandler square-rigged careen lugger hearties poop deck walk the plank yawl mutiny. Log hands rope's end sutler Privateer cog no prey, no pay Brethren of the Coast lugger Admiral of the Black.\\\\n\\\\nCorsair smartly quarterdeck deadlights measured fer yer chains driver Jack Tar flogging fire ship black jack. Chantey careen hearties lugsail Arr trysail jolly boat schooner gangplank swab. Holystone swing the lead grog blossom dead men tell no tales long boat belaying pin reef sails fore man-of-war topmast.\\\\n\\\\nBilge rat spike starboard measured fer yer chains rigging flogging bounty maroon me parley. Brig matey aft mizzen sheet long clothes hogshead scourge of the seven seas Pieces of Eight belay. Maroon Brethren of the Coast Spanish Main Pieces of Eight hardtack jolly boat lee gally lad flogging.\\\\n\\\\nShiver me timbers jolly boat ye sutler walk the plank ye jolly Pirate.\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Patch",
+					"item": [
+						{
+							"name": "Patch Brew (replace name)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name and brew date)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, brew date and state)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewedState\",\r\n        \"value\": \"2\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, brew date, state, notes)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewedState\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewingNotes\",\r\n        \"value\": \"Replacement note\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, brew date, state, notes, ABV)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewedState\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewingNotes\",\r\n        \"value\": \"Replacement note\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/aBV\",\r\n        \"value\": \"8.1\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, brew date, state, notes, ABV, rating)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewedState\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewingNotes\",\r\n        \"value\": \"Replacement note\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/aBV\",\r\n        \"value\": \"8.1\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/rating\",\r\n        \"value\": \"5\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, brew date, state, notes, ABV, rating, recipe ID)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewDate\",\r\n        \"value\": \"2021-01-14\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewedState\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/brewingNotes\",\r\n        \"value\": \"Replacement note\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/aBV\",\r\n        \"value\": \"8.1\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/rating\",\r\n        \"value\": \"5\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/recipeId\",\r\n        \"value\": \"1\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (add tasting note to end of array)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/tastingNotes/-\",\r\n        \"value\": { \"note\": \"new note\", \"date\": \"2021-01-18\" }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (insert tasting note at valid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/tastingNotes/0\",\r\n        \"value\": { \"note\": \"new note 2\", \"date\": \"2021-01-18\" }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (insert tasting note at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"add\",\r\n        \"path\": \"/tastingNotes/9\",\r\n        \"value\": { \"note\": \"new note 2\", \"date\": \"2021-01-18\" }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace tasting note)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/tastingNotes/0\",\r\n        \"value\": { \"note\": \"replaced note\", \"date\": \"2021-01-17\" }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace tasting note at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/tastingNotes/9\",\r\n        \"value\": { \"note\": \"replaced note\", \"date\": \"2021-01-17\" }\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (remove tasting note)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/tastingNotes/0\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (remove tasting note at invalid index)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"remove\",\r\n        \"path\": \"/tastingNotes/9\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Brews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/brews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brew",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/brews/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brew (include additional info)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/brews/2?includeAdditionalInfo=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews",
+								"2"
+							],
+							"query": [
+								{
+									"key": "includeAdditionalInfo",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Brew",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/brews/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Brew (invalid brew)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/brews/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

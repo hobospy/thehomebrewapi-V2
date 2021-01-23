@@ -24,7 +24,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetRecipes()
+        public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes()
         {
             var recipes = _homeBrewRepository.GetRecipes();
 
@@ -50,28 +50,13 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRecipe([FromBody] RecipeForCreationDto recipe)
+        public ActionResult<RecipeDto> CreateRecipe([FromBody] RecipeForCreationDto recipe)
         {
-            if (recipe.WaterProfileId == 0 || !_homeBrewRepository.WaterProfileExists(recipe.WaterProfileId))
+            if (!_homeBrewRepository.WaterProfileExists(recipe.WaterProfileId))
             {
                 ModelState.AddModelError(
                             "Description",
                             "The water profile ID for the recipe must exist.");
-            }
-
-            foreach (var step in recipe.Steps)
-            {
-                foreach (var ingredient in step.Ingredients)
-                {
-                    if (ingredient.Amount <= 0)
-                    {
-                        ModelState.AddModelError(
-                            "Description",
-                            "The ingredient amount for all ingredients must be a value greater than 0.");
-
-                        break;
-                    }
-                }
             }
 
             if (!ModelState.IsValid)
@@ -95,28 +80,13 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateRecipe(int id, [FromBody] RecipeForUpdateDto recipe)
+        public ActionResult UpdateRecipe(int id, [FromBody] RecipeForUpdateDto recipe)
         {
-            if (recipe.WaterProfileId == 0 || !_homeBrewRepository.WaterProfileExists(recipe.WaterProfileId))
+            if (!_homeBrewRepository.WaterProfileExists(recipe.WaterProfileId))
             {
                 ModelState.AddModelError(
                             "Description",
                             "The water profile ID for the recipe must exist.");
-            }
-
-            foreach (var step in recipe.Steps)
-            {
-                foreach (var ingredient in step.Ingredients)
-                {
-                    if (ingredient.Amount <= 0)
-                    {
-                        ModelState.AddModelError(
-                            "Description",
-                            "The ingredient amount for all ingredients must be a value greater than 0.");
-
-                        break;
-                    }
-                }
             }
 
             if (!ModelState.IsValid)
@@ -139,7 +109,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateRecipe(int id,
+        public ActionResult PartiallyUpdateRecipe(int id,
             [FromBody] JsonPatchDocument<RecipeForUpdateDto> patchDoc)
         {
             var recipeEntity = _homeBrewRepository.GetRecipe(id, true);
@@ -152,31 +122,16 @@ namespace thehomebrewapi.Controllers
 
             patchDoc.ApplyTo(recipeToPatch, ModelState);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (recipeToPatch.WaterProfileId == 0 || !_homeBrewRepository.WaterProfileExists(recipeToPatch.WaterProfileId))
+            if (!_homeBrewRepository.WaterProfileExists(recipeToPatch.WaterProfileId))
             {
                 ModelState.AddModelError(
                             "Description",
                             "The water profile ID for the recipe must exist.");
             }
 
-            foreach (var step in recipeToPatch.Steps)
+            if (!ModelState.IsValid)
             {
-                foreach (var ingredient in step.Ingredients)
-                {
-                    if (ingredient.Amount <= 0)
-                    {
-                        ModelState.AddModelError(
-                            "Description",
-                            "The ingredient amount for all ingredients must be a value greater than 0.");
-
-                        break;
-                    }
-                }
+                return BadRequest(ModelState);
             }
 
             if (!TryValidateModel(recipeToPatch))
@@ -193,7 +148,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteRecipe(int id)
+        public ActionResult DeleteRecipe(int id)
         {
             var recipeEntity = _homeBrewRepository.GetRecipe(id, false);
             if (recipeEntity == null)

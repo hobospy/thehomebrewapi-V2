@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using thehomebrewapi.Models;
 using thehomebrewapi.Services;
 
@@ -29,8 +27,9 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
+        // Possibly sould be replaced with a filter/search
         [HttpGet("/api/recipes/{recipesId}/ingredients")]
-        public IActionResult GetFullRecipeIngredients(int recipesId)
+        public ActionResult<IEnumerable<IngredientDto>> GetFullRecipeIngredients(int recipesId)
         {
             try
             {
@@ -52,7 +51,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetIngredients(int recipeId, int recipeStepId)
+        public ActionResult<IEnumerable<IngredientDto>> GetIngredients(int recipeId, int recipeStepId)
         {
             try
             {
@@ -82,7 +81,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetIngredient")]
-        public IActionResult GetIngredient(int recipeId, int recipeStepId, int id)
+        public ActionResult<IngredientDto> GetIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
@@ -108,21 +107,9 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateIngredient(int recipeStepId,
+        public ActionResult<IngredientDto> CreateIngredient(int recipeStepId,
             [FromBody] IngredientForCreationDto ingredient)
         {
-            if (ingredient.Amount <= 0)
-            {
-                ModelState.AddModelError(
-                    "Description",
-                    "The ingredient amount must be a value greater than 0.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (!_homeBrewRepository.RecipeStepExists(recipeStepId))
             {
                 return NotFound();
@@ -143,21 +130,9 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateIngredient(int recipeId, int recipeStepId, int id,
+        public ActionResult UpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] IngredientForUpdateDto ingredient)
         {
-            if (ingredient.Amount <= 0)
-            {
-                ModelState.AddModelError(
-                    "Description",
-                    "The ingredient amount must be a value greater than 0.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
                 return NotFound();
@@ -185,7 +160,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateIngredient(int recipeId, int recipeStepId, int id,
+        public ActionResult PartiallyUpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] JsonPatchDocument<IngredientForUpdateDto> patchDoc)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
@@ -207,17 +182,9 @@ namespace thehomebrewapi.Controllers
             var ingredientToPatch = _mapper.Map<IngredientForUpdateDto>(ingredientEntity);
 
             patchDoc.ApplyTo(ingredientToPatch, ModelState);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            if (ingredientToPatch.Amount <= 0)
-            {
-                ModelState.AddModelError(
-                    "Description",
-                    "The ingredient amount must be a value greater than 0.");
             }
 
             if (!TryValidateModel(ingredientToPatch))
@@ -235,7 +202,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteIngredient(int recipeId, int recipeStepId, int id)
+        public ActionResult DeleteIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {

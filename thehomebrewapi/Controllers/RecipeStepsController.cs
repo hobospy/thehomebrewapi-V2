@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using thehomebrewapi.Models;
 using thehomebrewapi.Services;
 
@@ -43,7 +41,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet("{id}", Name = "GetRecipeStep")]
-        public IActionResult GetRecipeStep(int recipeId, int id)
+        public ActionResult<RecipeStepDto> GetRecipeStep(int recipeId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
@@ -60,26 +58,9 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRecipeStep(int recipeId,
+        public ActionResult<RecipeStepDto> CreateRecipeStep(int recipeId,
             [FromBody] RecipeStepForCreationDto recipeStep)
         {
-            foreach(var ingredient in recipeStep.Ingredients)
-            {
-                if (ingredient.Amount <= 0)
-                {
-                    ModelState.AddModelError(
-                        "Description",
-                        "The ingredient amount for all ingredients must be a value greater than 0.");
-
-                    break;
-                }
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (!_homeBrewRepository.RecipeExists(recipeId))
             {
                 return NotFound();

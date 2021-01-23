@@ -1,15 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace thehomebrewapi.Models
+﻿namespace thehomebrewapi.Models
 {
-    public class WaterProfileForCreationDto
+    public class WaterProfileForCreationDto : WaterProfileForManipulationDto
     {
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
-        [MaxLength(500)]
-        public string Description { get; set; }
-        public ICollection<WaterProfileAdditionForCreationDto> Additions { get; set; } = new List<WaterProfileAdditionForCreationDto>();
     }
 }

@@ -25,7 +25,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetWaterProfiles()
+        public ActionResult<IEnumerable<WaterProfileDto>> GetWaterProfiles()
         {
             var waterProfiles = _homeBrewRepository.GetWaterProfiles();
 
@@ -51,25 +51,8 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateWaterProfile([FromBody] WaterProfileForCreationDto waterProfile)
+        public ActionResult<WaterProfileDto> CreateWaterProfile([FromBody] WaterProfileForCreationDto waterProfile)
         {
-            foreach(var addition in waterProfile.Additions)
-            {
-                if (addition.Amount == 0)
-                {
-                    ModelState.AddModelError(
-                            "Description",
-                            "The amount for all water profile additions must be a value greater than 0.");
-
-                    break;
-                }
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var finalWaterProfile = _mapper.Map<Entities.WaterProfile>(waterProfile);
 
             _homeBrewRepository.AddWaterProfile(finalWaterProfile);
@@ -84,30 +67,8 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateWaterProfile(int id, [FromBody] WaterProfileForUpdateDto waterProfile)
+        public ActionResult UpdateWaterProfile(int id, [FromBody] WaterProfileForUpdateDto waterProfile)
         {
-            foreach (var addition in waterProfile.Additions)
-            {
-                if (addition.Amount == 0)
-                {
-                    ModelState.AddModelError(
-                            "Addition amount error",
-                            $"The amount for water profile addition {addition.Name} must be a value greater than 0.");
-                }
-
-                if (!Enum.IsDefined(typeof(EUnitOfMeasure), addition.Unit))
-                {
-                    ModelState.AddModelError(
-                            "Addition unit error",
-                            $"The unit for water profile addition {addition.Name} must be a valid unit of measure.");
-                }
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var waterProfileEntity = _homeBrewRepository.GetWaterProfile(id, true);
             if (waterProfileEntity == null)
             {
@@ -124,7 +85,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartialUpdateWaterProfile(int id,
+        public ActionResult PartialUpdateWaterProfile(int id,
             [FromBody] JsonPatchDocument<WaterProfileForUpdateDto> patchDoc)
         {
             var waterProfileEntity = _homeBrewRepository.GetWaterProfile(id, true);
@@ -136,27 +97,9 @@ namespace thehomebrewapi.Controllers
             var waterProfileToPatch = _mapper.Map<WaterProfileForUpdateDto>(waterProfileEntity);
 
             patchDoc.ApplyTo(waterProfileToPatch, ModelState);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            foreach (var addition in waterProfileToPatch.Additions)
-            {
-                if (addition.Amount == 0)
-                {
-                    ModelState.AddModelError(
-                            "Addition amount error",
-                            $"The amount for water profile addition {addition.Name} must be a value greater than 0.");
-                }
-
-                if (!Enum.IsDefined(typeof(EUnitOfMeasure), addition.Unit))
-                {
-                    ModelState.AddModelError(
-                            "Addition unit error",
-                            $"The unit for water profile addition {addition.Name} must be a valid unit of measure.");
-                }
             }
 
             if (!TryValidateModel(waterProfileToPatch))
@@ -174,7 +117,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteWaterProfile(int id)
+        public ActionResult DeleteWaterProfile(int id)
         {
             var waterProfileEntity = _homeBrewRepository.GetWaterProfile(id, false);
             if (waterProfileEntity == null)
