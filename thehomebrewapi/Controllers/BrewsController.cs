@@ -23,6 +23,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public ActionResult<IEnumerable<BrewWithoutAdditionalInfoDto>> GetBrews()
         {
             var brews = _homebrewRepository.GetBrews();
@@ -159,6 +160,13 @@ namespace thehomebrewapi.Controllers
             _homebrewRepository.Save();
 
             return NoContent();
+        }
+
+        [HttpOptions]
+        public ActionResult GetBrewsOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH, DELETE");
+            return Ok();
         }
     }
 }

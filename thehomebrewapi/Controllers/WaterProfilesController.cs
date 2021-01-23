@@ -25,6 +25,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public ActionResult<IEnumerable<WaterProfileDto>> GetWaterProfiles()
         {
             var waterProfiles = _homeBrewRepository.GetWaterProfiles();
@@ -130,6 +131,13 @@ namespace thehomebrewapi.Controllers
             _homeBrewRepository.Save();
 
             return NoContent();
+        }
+
+        [HttpOptions]
+        public ActionResult GetWaterProfilesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH, DELETE");
+            return Ok();
         }
     }
 }

@@ -79,5 +79,12 @@ namespace thehomebrewapi.Controllers
                 new { recipeId, id = finalRecipeStep.Id },
                 createdRecipeStepToReturn);
         }
+
+        [HttpOptions]
+        public ActionResult GetRecipeStepsOptions()
+        {
+            Response.Headers.Add("Allow", "GET, POST");
+            return Ok();
+        }
     }
 }

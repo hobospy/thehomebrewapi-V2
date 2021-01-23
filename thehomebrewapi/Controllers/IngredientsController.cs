@@ -226,5 +226,12 @@ namespace thehomebrewapi.Controllers
 
             return NoContent();
         }
+
+        [HttpOptions]
+        public ActionResult GetIngredientsOptions()
+        {
+            Response.Headers.Add("Allow", "GET, POST, PUT, PATCH, DELETE");
+            return Ok();
+        }
     }
 }

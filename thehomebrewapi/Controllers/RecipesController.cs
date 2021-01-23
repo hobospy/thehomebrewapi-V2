@@ -24,6 +24,7 @@ namespace thehomebrewapi.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes()
         {
             var recipes = _homeBrewRepository.GetRecipes();
@@ -160,6 +161,13 @@ namespace thehomebrewapi.Controllers
             _homeBrewRepository.Save();
 
             return NoContent();
+        }
+
+        [HttpOptions]
+        public ActionResult GetRecipesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH, DELETE");
+            return Ok();
         }
     }
 }
