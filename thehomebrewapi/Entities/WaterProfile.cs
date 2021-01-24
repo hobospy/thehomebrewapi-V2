@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace thehomebrewapi.Entities
 {
-    public class Ingredient
+    public class WaterProfile
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,11 +14,8 @@ namespace thehomebrewapi.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
-        public double Amount { get; set; }
+        public string Description { get; set; }
 
-        [ForeignKey("RecipeStepId")]
-        public RecipeStep RecipeStep { get; set; }
-        public int RecipeStepId { get; set; }
+        public ICollection<WaterProfileAddition> Additions { get; set; } = new List<WaterProfileAddition>();
     }
 }

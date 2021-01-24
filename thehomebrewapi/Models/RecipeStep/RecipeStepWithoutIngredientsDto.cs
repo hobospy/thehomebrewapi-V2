@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace thehomebrewapi.Models
 {
-    public class RecipeWithoutIngredientsDto
+    public class RecipeStepWithoutIngredientsDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
+        public TimerDto Timer { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Entities
 {
@@ -17,6 +18,17 @@ namespace thehomebrewapi.Entities
         [MaxLength(500)]
         public string Description { get; set; }
 
-        public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+        [Required]
+        public ETypeOfBeer Type { get; set; }
+
+        public double ExpectedABV { get; set; }
+
+        public bool Favourite { get; set; } = false;
+
+        public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
+
+        [ForeignKey("WaterProfileId")]
+        public WaterProfile WaterProfile { get; set; }
+        public int WaterProfileId { get; set; }
     }
 }
