@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using thehomebrewapi.Contexts;
 using thehomebrewapi.Entities;
+using thehomebrewapi.Helpers;
+using thehomebrewapi.ResourceParameters;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Services
 {
-    public class HomeBrewRepository : IHomeBrewRepository
+    public class HomeBrewRepository : IHomeBrewRepository, IDisposable
     {
         private readonly HomeBrewContext _context;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public HomeBrewRepository(HomeBrewContext context)
+        public HomeBrewRepository(HomeBrewContext context,
+            IPropertyMappingService propertyMappingService)
         {
-            _context = context ?? throw new NullArgumentException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
         public IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId)
@@ -62,6 +68,44 @@ namespace thehomebrewapi.Services
             return _context.Recipes
                 .Include(r => r.WaterProfile).ThenInclude(wp => wp.Additions)
                 .OrderBy(r => r.Name).ToList();
+        }
+
+        public PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters)
+        {
+            if (recipesResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recipesResourceParameters));
+            }
+
+            var collection = _context.Recipes as IQueryable<Recipe>;
+
+            if (Enum.IsDefined(typeof(ETypeOfBeer), recipesResourceParameters.BeerType))
+            {
+                var beerType = (ETypeOfBeer)recipesResourceParameters.BeerType;
+
+                collection = collection.Where(r => r.Type == beerType);
+            }
+
+            if (!string.IsNullOrWhiteSpace(recipesResourceParameters.SearchQuery))
+            {
+                var searchQuery = recipesResourceParameters.SearchQuery.Trim();
+
+                collection = collection.Where(r => r.Name.Contains(searchQuery) ||
+                    r.Description.Contains(searchQuery));
+            }
+
+            if (!string.IsNullOrWhiteSpace(recipesResourceParameters.OrderBy))
+            {
+                var recipePropertyMappingDictionary =
+                    _propertyMappingService.GetPropertyMapping<Models.RecipeDto, Recipe>();
+
+                collection = collection.ApplySort(recipesResourceParameters.OrderBy,
+                    recipePropertyMappingDictionary);
+            }
+
+            return PagedList<Recipe>.Create(collection,
+                recipesResourceParameters.PageNumber,
+                recipesResourceParameters.PageSize);
         }
 
         public bool RecipeExists(int recipeId)
@@ -218,6 +262,20 @@ namespace thehomebrewapi.Services
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose resource here
+            }
         }
     }
 }

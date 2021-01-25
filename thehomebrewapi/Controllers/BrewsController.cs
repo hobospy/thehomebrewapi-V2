@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using thehomebrewapi.Models;
 using thehomebrewapi.Services;
@@ -17,9 +18,9 @@ namespace thehomebrewapi.Controllers
         public BrewsController(IHomeBrewRepository homeBrewRepository, IMapper mapper)
         {
             _homebrewRepository = homeBrewRepository ??
-                throw new NullArgumentException(nameof(homeBrewRepository));
+                throw new ArgumentNullException(nameof(homeBrewRepository));
             _mapper = mapper ??
-                throw new NullArgumentException(nameof(mapper));
+                throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]

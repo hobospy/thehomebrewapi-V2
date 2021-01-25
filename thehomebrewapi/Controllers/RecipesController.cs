@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using thehomebrewapi.Models;
+using thehomebrewapi.ResourceParameters;
 using thehomebrewapi.Services;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Controllers
 {
@@ -14,20 +17,50 @@ namespace thehomebrewapi.Controllers
     {
         private readonly IHomeBrewRepository _homeBrewRepository;
         private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public RecipesController(IHomeBrewRepository homeBrewRepository, IMapper mapper)
+        public RecipesController(IHomeBrewRepository homeBrewRepository, IMapper mapper, IPropertyMappingService propertyMappingService)
         {
             _homeBrewRepository = homeBrewRepository ??
                 throw new ArgumentNullException(nameof(homeBrewRepository));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            _propertyMappingService = propertyMappingService ??
+                throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetRecipes")]
         [HttpHead]
-        public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes()
+        public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes(
+            [FromQuery] RecipesResourceParameters recipesResourceParameters)
         {
-            var recipes = _homeBrewRepository.GetRecipes();
+            if (!_propertyMappingService.ValidMappingExistsFor<RecipeDto, Entities.Recipe>
+                (recipesResourceParameters.OrderBy))
+            {
+                return BadRequest();
+            }
+
+            var recipes = _homeBrewRepository.GetRecipes(recipesResourceParameters);
+
+            var previousPageLink = recipes.HasPrevious ?
+                CreateRecipesResourceUri(recipesResourceParameters, ETypeOfResourceUri.PreviousPage) :
+                null;
+            var nextPageLink = recipes.HasNext ?
+                CreateRecipesResourceUri(recipesResourceParameters, ETypeOfResourceUri.NextPage) :
+                null;
+
+            var paginationMetaData = new
+            {
+                totalCount = recipes.TotalCount,
+                pageSize = recipes.PageSize,
+                currentPage = recipes.CurrentPage,
+                totalPages = recipes.TotalPages,
+                previousPageLink,
+                nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(paginationMetaData));
 
             return Ok(_mapper.Map<IEnumerable<RecipeWithoutStepsDto>>(recipes));
         }
@@ -168,6 +201,45 @@ namespace thehomebrewapi.Controllers
         {
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH, DELETE");
             return Ok();
+        }
+
+        private string CreateRecipesResourceUri(
+            RecipesResourceParameters recipesResourceParameters,
+            ETypeOfResourceUri type)
+        {
+            switch(type)
+            {
+                case ETypeOfResourceUri.PreviousPage:
+                    return Url.Link("GetRecipes",
+                        new
+                        {
+                            orderBy = recipesResourceParameters.OrderBy,
+                            pageNumber = recipesResourceParameters.PageNumber - 1,
+                            pageSize = recipesResourceParameters.PageSize,
+                            beerType = recipesResourceParameters.BeerType,
+                            searchQuery = recipesResourceParameters.SearchQuery
+                        });
+                case ETypeOfResourceUri.NextPage:
+                    return Url.Link("GetRecipes",
+                        new
+                        {
+                            orderBy = recipesResourceParameters.OrderBy,
+                            pageNumber = recipesResourceParameters.PageNumber + 1,
+                            pageSize = recipesResourceParameters.PageSize,
+                            beerType = recipesResourceParameters.BeerType,
+                            searchQuery = recipesResourceParameters.SearchQuery
+                        });
+                default:
+                    return Url.Link("GetRecipes",
+                        new
+                        {
+                            orderBy = recipesResourceParameters.OrderBy,
+                            pageNumber = recipesResourceParameters.PageNumber,
+                            pageSize = recipesResourceParameters.PageSize,
+                            beerType = recipesResourceParameters.BeerType,
+                            searchQuery = recipesResourceParameters.SearchQuery
+                        });
+            }
         }
     }
 }

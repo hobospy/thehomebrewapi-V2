@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using thehomebrewapi.Entities;
+using thehomebrewapi.Helpers;
+using thehomebrewapi.ResourceParameters;
 
 namespace thehomebrewapi.Services
 {
     public interface IHomeBrewRepository
     {
         IEnumerable<Recipe> GetRecipes();
+        PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters);
 
         Recipe GetRecipe(int recipeId, bool includeSteps);
 

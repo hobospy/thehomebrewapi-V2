@@ -86,6 +86,9 @@ namespace thehomebrewapi
                     };
                 });
 
+            // Register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
             var connectionString = _configuration["connectionStrings:homeBrewDBConnectionString"];
             services.AddDbContext<HomeBrewContext>(o =>
             {
