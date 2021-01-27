@@ -32,9 +32,23 @@ namespace thehomebrewapi
         {
             const string PROBLEM_JSON = "application/problems+json";
 
+            services.AddHttpCacheHeaders((expirationModelOptions) =>
+            {
+                expirationModelOptions.MaxAge = 60;
+                expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Public;
+            },
+            (validateOptions) =>
+            {
+                validateOptions.MustRevalidate = true;
+            });
+
+            services.AddResponseCaching();
+
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.CacheProfiles.Add("240SecondsCacheProfile",
+                    new CacheProfile() { Duration = 240 });
             })
                 .AddNewtonsoftJson(setupAction =>
                 {
@@ -133,6 +147,10 @@ namespace thehomebrewapi
             }
 
             app.UseStatusCodePages();
+
+            app.UseResponseCaching();
+
+            app.UseHttpCacheHeaders();
 
             app.UseRouting();
 

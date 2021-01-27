@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -36,6 +37,7 @@ namespace thehomebrewapi.Controllers
 
         [HttpGet(Name = "GetWaterProfiles")]
         [HttpHead]
+        [HttpCacheExpiration(NoStore = true)]
         public ActionResult<IEnumerable<WaterProfileDto>> GetWaterProfiles(
             [FromQuery] WaterProfileResourceParameters waterProfileResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)

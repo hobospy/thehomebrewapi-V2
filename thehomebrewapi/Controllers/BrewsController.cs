@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -17,6 +18,7 @@ namespace thehomebrewapi.Controllers
 {
     [ApiController]
     [Route("api/brews")]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Private, MaxAge = 300)]
     public class BrewsController : ExtendedControllerBase
     {
         private readonly IHomeBrewRepository _homebrewRepository;
@@ -37,6 +39,7 @@ namespace thehomebrewapi.Controllers
 
         [HttpGet(Name = "GetBrews")]
         [HttpHead]
+        [HttpCacheExpiration(NoStore = true)]
         public ActionResult<IEnumerable<BrewWithoutAdditionalInfoDto>> GetBrews(
             [FromQuery] BrewsResourceParameters brewsResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
