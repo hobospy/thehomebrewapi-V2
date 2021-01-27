@@ -22,7 +22,7 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetRecipeSteps")]
         public IActionResult GetRecipeSteps(int recipeId, bool includeIngredients = false)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
@@ -57,7 +57,7 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<RecipeStepDto>(recipeStep));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateRecipeStep")]
         public ActionResult<RecipeStepDto> CreateRecipeStep(int recipeId,
             [FromBody] RecipeStepForCreationDto recipeStep)
         {

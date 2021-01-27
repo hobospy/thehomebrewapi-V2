@@ -163,7 +163,7 @@ namespace thehomebrewapi.Contexts
                 .HasData(
                     new Brew()
                     {
-                        ID = 1,
+                        Id = 1,
                         RecipeId = 1,
                         ABV = 4.3,
                         BrewDate = new DateTime(2020, 11, 14),
@@ -174,7 +174,7 @@ namespace thehomebrewapi.Contexts
                     },
                     new Brew()
                     {
-                        ID = 2,
+                        Id = 2,
                         RecipeId = 1,
                         ABV = 4.1,
                         BrewDate = new DateTime(2021, 1, 19),

@@ -7,11 +7,14 @@ namespace thehomebrewapi.Entities
         public enum ETypeOfResourceUri
         {
             PreviousPage,
-            NextPage
+            NextPage,
+            Current
         }
 
         public enum ETypeOfBeer : short
         {
+            [Description("Not specified")]
+            NotSpecified,
             [Description("Light lager")]
             LightLager,
             [Description("Pilsner")]

@@ -42,7 +42,7 @@ namespace thehomebrewapi.Services
 
         void AddTimerForRecipeStep(int recipeId, int stepId, Timer timer);
 
-        IEnumerable<WaterProfile> GetWaterProfiles();
+        PagedList<WaterProfile> GetWaterProfiles(WaterProfileResourceParameters waterProfileResourceParameters);
 
         WaterProfile GetWaterProfile(int waterProfileId, bool includeAdditions);
 
@@ -53,6 +53,8 @@ namespace thehomebrewapi.Services
         void UpdateWaterProfile(WaterProfile waterProfile);
 
         void DeleteWaterProfile(WaterProfile waterProfile);
+
+        PagedList<Brew> GetBrews(BrewsResourceParameters brewsResourceParameters);
 
         IEnumerable<Brew> GetBrews();
 

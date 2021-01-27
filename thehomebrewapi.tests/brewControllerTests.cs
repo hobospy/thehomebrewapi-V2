@@ -38,7 +38,7 @@ namespace thehomebrewapi.tests
         {
             var brew = new Brew()
             {
-                ID = 1,
+                Id = 1,
                 ABV = 2.3,
                 BrewDate = new DateTime(2021, 1, 1),
                 BrewingNotes = "No notes",
@@ -64,7 +64,7 @@ namespace thehomebrewapi.tests
         {
             var brew = new Brew()
             {
-                ID = 1,
+                Id = 1,
                 ABV = 2.3,
                 BrewDate = new DateTime(2021, 1, 1),
                 BrewingNotes = "No notes",

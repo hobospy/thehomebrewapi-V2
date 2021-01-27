@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 using thehomebrewapi.Contexts;
 using thehomebrewapi.Services;
 
@@ -85,6 +87,17 @@ namespace thehomebrewapi
                         };
                     };
                 });
+
+            services.Configure<MvcOptions>(config =>
+           {
+               var newtonsoftJsonOutputFormatter = config.OutputFormatters
+               .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
+
+               if (newtonsoftJsonOutputFormatter != null)
+               {
+                   newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
+               }
+           });
 
             // Register PropertyMappingService
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
