@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using thehomebrewapi.Entities;
+using thehomebrewapi.Helpers;
+using thehomebrewapi.ResourceParameters;
 
 namespace thehomebrewapi.Services
 {
     public interface IHomeBrewRepository
     {
         IEnumerable<Recipe> GetRecipes();
+        PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters);
 
         Recipe GetRecipe(int recipeId, bool includeSteps);
 
@@ -39,7 +42,7 @@ namespace thehomebrewapi.Services
 
         void AddTimerForRecipeStep(int recipeId, int stepId, Timer timer);
 
-        IEnumerable<WaterProfile> GetWaterProfiles();
+        PagedList<WaterProfile> GetWaterProfiles(WaterProfileResourceParameters waterProfileResourceParameters);
 
         WaterProfile GetWaterProfile(int waterProfileId, bool includeAdditions);
 
@@ -50,6 +53,8 @@ namespace thehomebrewapi.Services
         void UpdateWaterProfile(WaterProfile waterProfile);
 
         void DeleteWaterProfile(WaterProfile waterProfile);
+
+        PagedList<Brew> GetBrews(BrewsResourceParameters brewsResourceParameters);
 
         IEnumerable<Brew> GetBrews();
 

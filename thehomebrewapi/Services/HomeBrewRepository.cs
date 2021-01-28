@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using thehomebrewapi.Contexts;
 using thehomebrewapi.Entities;
+using thehomebrewapi.Helpers;
+using thehomebrewapi.ResourceParameters;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Services
 {
-    public class HomeBrewRepository : IHomeBrewRepository
+    public class HomeBrewRepository : IHomeBrewRepository, IDisposable
     {
         private readonly HomeBrewContext _context;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public HomeBrewRepository(HomeBrewContext context)
+        public HomeBrewRepository(HomeBrewContext context,
+            IPropertyMappingService propertyMappingService)
         {
-            _context = context ?? throw new NullArgumentException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
         public IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId)
@@ -48,6 +54,7 @@ namespace thehomebrewapi.Services
             {
                 return _context.Recipes
                     .Include(r => r.Steps).ThenInclude(s => s.Ingredients)
+                    .Include(r => r.Steps).ThenInclude(s => s.Timer)
                     .Include(r => r.WaterProfile).ThenInclude(wp => wp.Additions)
                     .Where(r => r.Id == recipeId).FirstOrDefault();
             }
@@ -62,6 +69,46 @@ namespace thehomebrewapi.Services
             return _context.Recipes
                 .Include(r => r.WaterProfile).ThenInclude(wp => wp.Additions)
                 .OrderBy(r => r.Name).ToList();
+        }
+
+        public PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters)
+        {
+            if (recipesResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recipesResourceParameters));
+            }
+
+            var collection = _context.Recipes as IQueryable<Recipe>;
+
+            collection = collection.Include(r => r.WaterProfile).ThenInclude(wp => wp.Additions);
+
+            if (Enum.IsDefined(typeof(ETypeOfBeer), recipesResourceParameters.BeerType))
+            {
+                var beerType = (ETypeOfBeer)recipesResourceParameters.BeerType;
+
+                collection = collection.Where(r => r.Type == beerType);
+            }
+
+            if (!string.IsNullOrWhiteSpace(recipesResourceParameters.SearchQuery))
+            {
+                var searchQuery = recipesResourceParameters.SearchQuery.Trim();
+
+                collection = collection.Where(r => r.Name.Contains(searchQuery) ||
+                    r.Description.Contains(searchQuery));
+            }
+
+            if (!string.IsNullOrWhiteSpace(recipesResourceParameters.OrderBy))
+            {
+                var recipePropertyMappingDictionary =
+                    _propertyMappingService.GetPropertyMapping<Models.RecipeDto, Recipe>();
+
+                collection = collection.ApplySort(recipesResourceParameters.OrderBy,
+                    recipePropertyMappingDictionary);
+            }
+
+            return PagedList<Recipe>.Create(collection,
+                recipesResourceParameters.PageNumber,
+                recipesResourceParameters.PageSize);
         }
 
         public bool RecipeExists(int recipeId)
@@ -115,13 +162,16 @@ namespace thehomebrewapi.Services
         {
             if (includeIngredients)
             {
-                var result = _context.RecipeSteps.Include(rs => rs.Ingredients)
+                var result = _context.RecipeSteps
+                    .Include(rs => rs.Ingredients)
+                    .Include(rs => rs.Timer)
                     .Where(rs => rs.RecipeId == recipeId).ToList();
 
                 return result;
             }
 
             return _context.RecipeSteps
+                .Include(rs => rs.Timer)
                 .Where(rs => rs.RecipeId == recipeId).ToList();
         }
 
@@ -143,9 +193,37 @@ namespace thehomebrewapi.Services
             recipeStep.Timer = timer;
         }
 
-        public IEnumerable<WaterProfile> GetWaterProfiles()
+        public PagedList<WaterProfile> GetWaterProfiles(WaterProfileResourceParameters waterProfileResourceParameters)
         {
-            return _context.WaterProfiles.OrderBy(wp => wp.Name).ToList();
+            if (waterProfileResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(waterProfileResourceParameters));
+            }
+
+            var collection = _context.WaterProfiles as IQueryable<WaterProfile>;
+
+            collection = collection.Include(wp => wp.Additions);
+
+            if (!string.IsNullOrWhiteSpace(waterProfileResourceParameters.SearchQuery))
+            {
+                var searchQuery = waterProfileResourceParameters.SearchQuery.Trim();
+
+                collection = collection.Where(r => r.Name.Contains(searchQuery) ||
+                    r.Description.Contains(searchQuery));
+            }
+
+            if (!string.IsNullOrWhiteSpace(waterProfileResourceParameters.OrderBy))
+            {
+                var waterProfilePropertyMappingDictionary =
+                    _propertyMappingService.GetPropertyMapping<Models.WaterProfileDto, WaterProfile>();
+
+                collection = collection.ApplySort(waterProfileResourceParameters.OrderBy,
+                    waterProfilePropertyMappingDictionary);
+            }
+
+            return PagedList<WaterProfile>.Create(collection,
+                waterProfileResourceParameters.PageNumber,
+                waterProfileResourceParameters.PageSize);
         }
 
         public WaterProfile GetWaterProfile(int waterProfileId, bool includeAdditions)
@@ -181,6 +259,43 @@ namespace thehomebrewapi.Services
             _context.WaterProfiles.Remove(waterProfile);
         }
 
+        public PagedList<Brew> GetBrews(BrewsResourceParameters brewsResourceParameters)
+        {
+            if (brewsResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(brewsResourceParameters));
+            }
+
+            var collection = _context.Brews as IQueryable<Brew>;
+
+            if (brewsResourceParameters.MinRating > 0)
+            {
+                collection = collection.Where(b => b.Rating >= brewsResourceParameters.MinRating);
+            }
+
+            if (!string.IsNullOrWhiteSpace(brewsResourceParameters.SearchQuery))
+            {
+                var searchQuery = brewsResourceParameters.SearchQuery.Trim();
+
+                collection = collection.Where(b => b.Name.Contains(searchQuery) ||
+                    b.BrewingNotes.Contains(searchQuery) ||
+                    b.TastingNotes.Where(tn => tn.Note.Contains(searchQuery)).Any());
+            }
+
+            if (!string.IsNullOrWhiteSpace(brewsResourceParameters.OrderBy))
+            {
+                var brewPropertyMappingDictionary =
+                    _propertyMappingService.GetPropertyMapping<Models.BrewDto, Brew>();
+
+                collection = collection.ApplySort(brewsResourceParameters.OrderBy,
+                    brewPropertyMappingDictionary);
+            }
+
+            return PagedList<Brew>.Create(collection,
+                brewsResourceParameters.PageNumber,
+                brewsResourceParameters.PageSize);
+        }
+
         public IEnumerable<Brew> GetBrews()
         {
             return _context.Brews.OrderBy(b => b.BrewDate).ToList();
@@ -194,10 +309,11 @@ namespace thehomebrewapi.Services
                                      .Include(b => b.Recipe.Steps).ThenInclude(s => s.Ingredients)
                                      .Include(b => b.Recipe.Steps).ThenInclude(s => s.Timer)
                                      .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions)
-                                     .FirstOrDefault(b => b.ID == brewId);
+                                     .FirstOrDefault(b => b.Id == brewId);
             }
             return _context.Brews
-                .FirstOrDefault(b => b.ID == brewId);
+                .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions)
+                .FirstOrDefault(b => b.Id == brewId);
         }
 
         public void AddBrew(Brew brew)
@@ -218,6 +334,20 @@ namespace thehomebrewapi.Services
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose resource here
+            }
         }
     }
 }

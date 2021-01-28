@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 using thehomebrewapi.Contexts;
 using thehomebrewapi.Services;
 
@@ -30,9 +32,23 @@ namespace thehomebrewapi
         {
             const string PROBLEM_JSON = "application/problems+json";
 
+            services.AddHttpCacheHeaders((expirationModelOptions) =>
+            {
+                expirationModelOptions.MaxAge = 60;
+                expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Public;
+            },
+            (validateOptions) =>
+            {
+                validateOptions.MustRevalidate = true;
+            });
+
+            services.AddResponseCaching();
+
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.CacheProfiles.Add("240SecondsCacheProfile",
+                    new CacheProfile() { Duration = 240 });
             })
                 .AddNewtonsoftJson(setupAction =>
                 {
@@ -86,6 +102,20 @@ namespace thehomebrewapi
                     };
                 });
 
+            services.Configure<MvcOptions>(config =>
+           {
+               var newtonsoftJsonOutputFormatter = config.OutputFormatters
+               .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
+
+               if (newtonsoftJsonOutputFormatter != null)
+               {
+                   newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
+               }
+           });
+
+            // Register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
             var connectionString = _configuration["connectionStrings:homeBrewDBConnectionString"];
             services.AddDbContext<HomeBrewContext>(o =>
             {
@@ -117,6 +147,10 @@ namespace thehomebrewapi
             }
 
             app.UseStatusCodePages();
+
+            app.UseResponseCaching();
+
+            app.UseHttpCacheHeaders();
 
             app.UseRouting();
 

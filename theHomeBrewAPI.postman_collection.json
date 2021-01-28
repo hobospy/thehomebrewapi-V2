@@ -1050,10 +1050,63 @@
 					"response": []
 				},
 				{
-					"name": "Get Recipe",
+					"name": "Get Recipes (requesting HATEOAS links)",
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe (requesting HATEOAS links)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:59607/api/recipes/1",
 							"protocol": "http",
@@ -1075,6 +1128,39 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1?includeSteps=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1"
+							],
+							"query": [
+								{
+									"key": "includeSteps",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe (include steps and request HATEOAS links)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:59607/api/recipes/1?includeSteps=true",
 							"protocol": "http",
@@ -1134,6 +1220,115 @@
 								"api",
 								"recipes",
 								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Head Recipes",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Head Recipe",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/99",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"99"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Options Recipes",
+					"request": {
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Options Recipe",
+					"request": {
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/vnd.homeBrewAPI.hateoas+json",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes"
 							]
 						}
 					},
@@ -1293,6 +1488,28 @@
 								"2",
 								"ingredients",
 								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipe Ingredients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/ingredients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"ingredients"
 							]
 						}
 					},
@@ -1501,6 +1718,41 @@
 					"response": []
 				},
 				{
+					"name": "Put Ingredient (amount is zero)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Rice husks\",\n\t\"amount\": \"0\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Patch Ingredient",
 					"request": {
 						"method": "PATCH",
@@ -1635,6 +1887,41 @@
 					"response": []
 				},
 				{
+					"name": "Patch Ingredient (amount equal to zero)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/amount\",\r\n        \"value\": \"0\"\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/1/recipeSteps/2/ingredients/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"1",
+								"recipeSteps",
+								"2",
+								"ingredients",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete Ingredient",
 					"request": {
 						"method": "DELETE",
@@ -1654,28 +1941,6 @@
 								"2",
 								"ingredients",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Recipe Ingredients",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:59607/api/recipes/1/ingredients",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "59607",
-							"path": [
-								"api",
-								"recipes",
-								"1",
-								"ingredients"
 							]
 						}
 					},
@@ -1837,6 +2102,38 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"description\": \"Mash in the grain\",\n    \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\n    \"ingredients\" : [\n        { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\n        { \"name\": \"New ingredient 2\", \"amount\": \"4\"},\n        { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:59607/api/recipes/2/recipeSteps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"recipes",
+								"2",
+								"recipeSteps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post RecipeStep (including timer and ingredients invalid amount)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"Mash in the grain\",\n    \"timer\" : { \"duration\": \"5\", \"type\": \"0\" },\n    \"ingredients\" : [\n        { \"name\": \"New ingredient 1\", \"amount\": \"2\"},\n        { \"name\": \"New ingredient 2\", \"amount\": \"0\"},\n        { \"name\": \"New ingredient 3\", \"amount\": \"6\"}\n    ]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:59607/api/recipes/2/recipeSteps",
@@ -2086,7 +2383,37 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"unit\": \"100\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/waterProfiles",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"waterProfiles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Water Profile (invalid unit of measure)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"New water profile\",\r\n    \"description\": \"New description\",\r\n    \"additions\": [\r\n        { \"name\": \"New addition 1\", \"amount\": \"41\", \"unit\": \"2\" },\r\n        { \"name\": \"New addition 2\", \"amount\": \"350\", \"unit\": \"1\" }\r\n    ]\r\n}"
 								},
 								"url": {
 									"raw": "http://localhost:59607/api/waterProfiles",
@@ -2882,6 +3209,41 @@
 							"response": []
 						},
 						{
+							"name": "Post Brew (all fields, requesting HATEAOS links)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/vnd.homeBrewAPI.hateoas+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"new brew\",\r\n    \"recipeId\": \"1\",\r\n    \"brewDate\": \"2021-01-13\",\r\n    \"brewedState\": \"0\",\r\n    \"brewingNotes\": \"New brewing notes\",\r\n    \"aBV\": \"4.6\",\r\n    \"rating\": \"3.5\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Post Brew (missing name)",
 							"request": {
 								"method": "POST",
@@ -3157,7 +3519,7 @@
 					"name": "Put",
 					"item": [
 						{
-							"name": "Post Brew (required fields only)",
+							"name": "Put Brew (required fields only)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3188,7 +3550,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (all fields)",
+							"name": "Put Brew (all fields)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3219,7 +3581,43 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (missing name)",
+							"name": "Put Brew (all fields, requesting HATEAOS links)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/vnd.homeBrewAPI.hateoas+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"updated brew\",\r\n    \"recipeId\": \"2\",\r\n    \"brewDate\": \"2021-01-15\",\r\n    \"brewedState\": \"1\",\r\n    \"brewingNotes\": \"Amended brewing notes\",\r\n    \"aBV\": \"5.1\",\r\n    \"rating\": \"4\",\r\n    \"tastingNotes\": [\r\n        { \"note\": \"Tasting note 1\", \"date\": \"2021-01-14\" },\r\n        { \"note\": \"Tasting note 2\", \"date\": \"2021-01-16\" },\r\n        { \"note\": \"Tasting note 3\", \"date\": \"2021-01-17\" }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put Brew (missing name)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3250,7 +3648,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (long name)",
+							"name": "Put Brew (long name)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3281,7 +3679,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (missing recipe ID)",
+							"name": "Put  Brew (missing recipe ID)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3312,7 +3710,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (invalid recipe ID)",
+							"name": "Put Brew (invalid recipe ID)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3343,7 +3741,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (invalid brewed state)",
+							"name": "Put Brew (invalid brewed state)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3374,7 +3772,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (long brewing notes)",
+							"name": "Put Brew (long brewing notes)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3405,7 +3803,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (missing tasting note)",
+							"name": "Put Brew (missing tasting note)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3436,7 +3834,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (missing tasting note date)",
+							"name": "Put Brew (missing tasting note date)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3467,7 +3865,7 @@
 							"response": []
 						},
 						{
-							"name": "Post Brew (long tasting note)",
+							"name": "Put Brew (long tasting note)",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -3511,6 +3909,42 @@
 										"key": "Content-Type",
 										"type": "text",
 										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"New name\"\r\n    }\r\n]"
+								},
+								"url": {
+									"raw": "http://localhost:59607/api/brews/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "59607",
+									"path": [
+										"api",
+										"brews",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Brew (replace name, requesting HATEOAS links)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/vnd.homeBrewAPI.hateoas+json",
+										"type": "text"
 									}
 								],
 								"body": {
@@ -3942,6 +4376,32 @@
 					"name": "Get Brews",
 					"request": {
 						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:59607/api/brews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "59607",
+							"path": [
+								"api",
+								"brews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brews (requesting HATEOAS links)",
+					"request": {
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:59607/api/brews",
@@ -4049,6 +4509,26 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Get Root",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:59607/api/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "59607",
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
