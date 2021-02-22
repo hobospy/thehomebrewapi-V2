@@ -23,11 +23,12 @@ namespace thehomebrewapi.tests
             var invalidId = 5;
             var homeBrewRepositoryMock = new Mock<IHomeBrewRepository>();
             var mapperMock = new Mock<IMapper>();
-            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
+            var propertyMappingServiceMock = new Mock<IPropertyMappingService>();
+            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns((Brew)null);
 
-            var result = brewsController.GetBrew(invalidId);
+            var result = brewsController.GetBrew(invalidId, "");
 
             var notFoundObjectResult = result as NotFoundResult;
             Assert.IsNotNull(notFoundObjectResult);
@@ -49,11 +50,12 @@ namespace thehomebrewapi.tests
 
             var homeBrewRepositoryMock = new Mock<IHomeBrewRepository>();
             var mapperMock = new Mock<IMapper>();
-            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
+            var propertyMappingServiceMock = new Mock<IPropertyMappingService>();
+            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns(brew);
 
-            var result = brewsController.GetBrew(5);
+            var result = brewsController.GetBrew(5, "");
 
             var okObjectResult = result as OkObjectResult;
             Assert.AreEqual(brew, okObjectResult.Value);
@@ -75,14 +77,14 @@ namespace thehomebrewapi.tests
                 {
                     new TastingNote
                     {
-                        ID = 1,
+                        Id = 1,
                         BrewID = 1,
                         Date = new DateTime(2021, 1, 4),
                         Note = "First new note"
                     },
                     new TastingNote
                     {
-                        ID = 2,
+                        Id = 2,
                         BrewID = 1,
                         Date = new DateTime(2021, 1, 12),
                         Note = "Second new note"
@@ -92,11 +94,12 @@ namespace thehomebrewapi.tests
 
             var homeBrewRepositoryMock = new Mock<IHomeBrewRepository>();
             var mapperMock = new Mock<IMapper>();
-            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object);
+            var propertyMappingServiceMock = new Mock<IPropertyMappingService>();
+            var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.IsAny<int>(), false)).Returns(brew);
 
-            var result = brewsController.GetBrew(5);
+            var result = brewsController.GetBrew(5, "");
 
             var okObjectResult = result as OkObjectResult;
             Assert.AreEqual(brew, okObjectResult.Value);

@@ -14,6 +14,7 @@ namespace thehomebrewapi.Contexts
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<WaterProfileAddition> WaterProfileAdditions { get; set; }
         public DbSet<Brew> Brews { get; set; }
+        public DbSet<TastingNote> TastingNotes { get; set; }
 
         public HomeBrewContext(DbContextOptions<HomeBrewContext> options)
             : base(options)
@@ -142,21 +143,24 @@ namespace thehomebrewapi.Contexts
                         Id = 1,
                         RecipeStepId = 2,
                         Name = "Amarillo",
-                        Amount = 68
+                        Amount = 68,
+                        Unit = EUnitOfMeasure.gram
                     },
                     new Ingredient()
                     {
                         Id = 2,
                         RecipeStepId = 2,
                         Name = "Pale malt",
-                        Amount = 5.5
+                        Amount = 5.5,
+                        Unit = EUnitOfMeasure.kilo
                     },
                     new Ingredient()
                     {
                         Id = 3,
                         RecipeStepId = 2,
                         Name = "Light crystal malt",
-                        Amount = 150
+                        Amount = 150,
+                        Unit = EUnitOfMeasure.gram
                     });
 
             modelBuilder.Entity<Brew>()
@@ -180,6 +184,24 @@ namespace thehomebrewapi.Contexts
                         BrewDate = new DateTime(2021, 1, 19),
                         BrewedState = EBrewedState.notBrewed,
                         Name = "Gonna be better brew"
+                    }
+                );
+
+            modelBuilder.Entity<TastingNote>()
+                .HasData(
+                    new TastingNote()
+                    {
+                        Id = 1,
+                        Date = new DateTime(2021, 1, 1),
+                        Note = "Oooooh so tasty",
+                        BrewID = 1
+                    },
+                    new TastingNote()
+                    {
+                        Id = 2,
+                        Date = new DateTime(2021, 1, 10),
+                        Note = "Oh my god, what happened, has someone poisoned this!!",
+                        BrewID = 1
                     }
                 );
 

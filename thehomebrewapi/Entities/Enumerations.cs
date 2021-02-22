@@ -4,7 +4,7 @@ namespace thehomebrewapi.Entities
 {
     public class Enumerations
     {
-        public enum ETypeOfResourceUri
+        public enum ETypeOfResourceUri : short
         {
             PreviousPage,
             NextPage,

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Marvin.Cache.Headers;
+//using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -38,7 +38,7 @@ namespace thehomebrewapi.Controllers
 
         [HttpGet(Name = "GetRecipes")]
         [HttpHead]
-        [HttpCacheExpiration(NoStore = true)]
+        //[HttpCacheExpiration(NoStore = true)]
         public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes(
             [FromQuery] RecipesResourceParameters recipesResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -69,8 +69,8 @@ namespace thehomebrewapi.Controllers
             Response.Headers.Add(this.PAGINATION_HEADER,
                 JsonSerializer.Serialize(paginationMetaData));
 
-            var shapedRecipes = _mapper.Map<IEnumerable<RecipeWithoutStepsDto>>(recipes).
-                ShapeData(null);
+            var shapedRecipes = _mapper.Map<IEnumerable<RecipeWithoutStepsDto>>(recipes)
+                                       .ShapeData(null);
 
             if (parsedMediaTypes.Any(pmt => pmt.SubTypeWithoutSuffix.EndsWith(this.HATEOAS, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -136,7 +136,7 @@ namespace thehomebrewapi.Controllers
                 Ok(_mapper.Map<RecipeWithoutStepsDto>(recipe).ShapeData(null));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateRecipe")]
         public ActionResult<RecipeDto> CreateRecipe([FromBody] RecipeForCreationDto recipe,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
@@ -331,7 +331,7 @@ namespace thehomebrewapi.Controllers
             return Ok();
         }
 
-        #region Private methods
+        #region Private functions
         private IEnumerable<LinkDto> CreateLinksForRecipe(int id, bool includeSteps)
         {
             var links = new List<LinkDto>();

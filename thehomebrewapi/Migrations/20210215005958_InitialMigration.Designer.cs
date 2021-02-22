@@ -10,8 +10,8 @@ using thehomebrewapi.Contexts;
 namespace thehomebrewapi.Migrations
 {
     [DbContext(typeof(HomeBrewContext))]
-    [Migration("20210117011644_InitialHomeBrewDB")]
-    partial class InitialHomeBrewDB
+    [Migration("20210215005958_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace thehomebrewapi.Migrations
 
             modelBuilder.Entity("thehomebrewapi.Entities.Brew", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -52,7 +52,7 @@ namespace thehomebrewapi.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -61,7 +61,7 @@ namespace thehomebrewapi.Migrations
                     b.HasData(
                         new
                         {
-                            ID = 1,
+                            Id = 1,
                             ABV = 4.2999999999999998,
                             BrewDate = new DateTime(2020, 11, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             BrewedState = 2,
@@ -72,7 +72,7 @@ namespace thehomebrewapi.Migrations
                         },
                         new
                         {
-                            ID = 2,
+                            Id = 2,
                             ABV = 4.0999999999999996,
                             BrewDate = new DateTime(2021, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             BrewedState = 0,
@@ -100,6 +100,9 @@ namespace thehomebrewapi.Migrations
                     b.Property<int>("RecipeStepId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Unit")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeStepId");
@@ -112,21 +115,24 @@ namespace thehomebrewapi.Migrations
                             Id = 1,
                             Amount = 68.0,
                             Name = "Amarillo",
-                            RecipeStepId = 2
+                            RecipeStepId = 2,
+                            Unit = 1
                         },
                         new
                         {
                             Id = 2,
                             Amount = 5.5,
                             Name = "Pale malt",
-                            RecipeStepId = 2
+                            RecipeStepId = 2,
+                            Unit = 0
                         },
                         new
                         {
                             Id = 3,
                             Amount = 150.0,
                             Name = "Light crystal malt",
-                            RecipeStepId = 2
+                            RecipeStepId = 2,
+                            Unit = 1
                         });
                 });
 
@@ -172,7 +178,7 @@ namespace thehomebrewapi.Migrations
                             ExpectedABV = 3.5,
                             Favourite = true,
                             Name = "Amarillo SMaSH",
-                            Type = (short)6,
+                            Type = (short)7,
                             WaterProfileId = 1
                         },
                         new
@@ -182,7 +188,7 @@ namespace thehomebrewapi.Migrations
                             ExpectedABV = 5.2000000000000002,
                             Favourite = false,
                             Name = "Raspberry Porter",
-                            Type = (short)9,
+                            Type = (short)10,
                             WaterProfileId = 2
                         },
                         new
@@ -192,7 +198,7 @@ namespace thehomebrewapi.Migrations
                             ExpectedABV = 6.7999999999999998,
                             Favourite = false,
                             Name = "Bock",
-                            Type = (short)15,
+                            Type = (short)16,
                             WaterProfileId = 2
                         });
                 });
@@ -253,7 +259,7 @@ namespace thehomebrewapi.Migrations
 
             modelBuilder.Entity("thehomebrewapi.Entities.TastingNote", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -269,11 +275,27 @@ namespace thehomebrewapi.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("BrewID");
 
-                    b.ToTable("TastingNote");
+                    b.ToTable("TastingNotes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrewID = 1,
+                            Date = new DateTime(2021, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Note = "Oooooh so tasty"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrewID = 1,
+                            Date = new DateTime(2021, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Note = "Oh my god, what happened, has someone poisoned this!!"
+                        });
                 });
 
             modelBuilder.Entity("thehomebrewapi.Entities.Timer", b =>

@@ -273,6 +273,14 @@ namespace thehomebrewapi.Services
                 collection = collection.Where(b => b.Rating >= brewsResourceParameters.MinRating);
             }
 
+            if (brewsResourceParameters.IncludeAdditionalInfo)
+            {
+                collection = collection.Include(b => b.TastingNotes)
+                                       .Include(b => b.Recipe.Steps).ThenInclude(s => s.Ingredients)
+                                       .Include(b => b.Recipe.Steps).ThenInclude(s => s.Timer)
+                                       .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions);
+            }
+
             if (!string.IsNullOrWhiteSpace(brewsResourceParameters.SearchQuery))
             {
                 var searchQuery = brewsResourceParameters.SearchQuery.Trim();
@@ -321,6 +329,11 @@ namespace thehomebrewapi.Services
             _context.Brews.Add(brew);
         }
 
+        public bool BrewExists(int brewId)
+        {
+            return _context.Brews.Any(b => b.Id == brewId);
+        }
+
         public void DeleteBrew(Brew brew)
         {
             _context.Brews.Remove(brew);
@@ -329,6 +342,67 @@ namespace thehomebrewapi.Services
         public void UpdateBrew(Brew brew)
         {
             _context.Brews.Update(brew);
+        }
+
+        public PagedList<TastingNote> GetTastingNotes(TastingNotesResourceParameters tastingNotesResourceParameters)
+        {
+            if (tastingNotesResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(tastingNotesResourceParameters));
+            }
+
+            var collection = _context.TastingNotes as IQueryable<TastingNote>;
+
+            if (tastingNotesResourceParameters.BrewId != TastingNotesResourceParameters.INVALID_BREW_ID)
+            {
+                collection = collection.Where(tn => tn.BrewID == tastingNotesResourceParameters.BrewId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(tastingNotesResourceParameters.SearchQuery))
+            {
+                var searchQuery = tastingNotesResourceParameters.SearchQuery.Trim();
+
+                collection = collection.Where(b => b.Note.Contains(searchQuery));
+            }
+
+            if (!string.IsNullOrWhiteSpace(tastingNotesResourceParameters.OrderBy))
+            {
+                var tastingNotePropertyMappingDictionary = 
+                    _propertyMappingService.GetPropertyMapping<Models.TastingNoteDto, TastingNote>();
+
+                collection = collection.ApplySort(tastingNotesResourceParameters.OrderBy,
+                    tastingNotePropertyMappingDictionary);
+            }
+
+            return PagedList<TastingNote>.Create(collection,
+                tastingNotesResourceParameters.PageNumber,
+                tastingNotesResourceParameters.PageSize);
+        }
+
+        public IEnumerable<TastingNote> GetTastingNotes()
+        {
+            return _context.TastingNotes.OrderBy(b => b.Date).ToList();
+        }
+
+        public TastingNote GetTastingNote(int brewId, int noteId)
+        {
+            return _context.TastingNotes
+                .FirstOrDefault(tn => tn.BrewID == brewId && tn.Id == noteId);
+        }
+
+        public void AddTastingNote(TastingNote tastingNote)
+        {
+            _context.TastingNotes.Add(tastingNote);
+        }
+
+        public void UpdateTastingNote(TastingNote tastingNote)
+        {
+            _context.TastingNotes.Update(tastingNote);
+        }
+
+        public void DeleteTastingNote(TastingNote tastingNote)
+        {
+            _context.TastingNotes.Remove(tastingNote);
         }
 
         public bool Save()

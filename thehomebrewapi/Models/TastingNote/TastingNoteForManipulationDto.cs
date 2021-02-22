@@ -9,6 +9,7 @@ namespace thehomebrewapi.Models
         [Required]
         [MaxLength(1000)]
         public string Note { get; set; }
+        
         [Required]
         [TastingNoteDateIsValidAttribute(ErrorMessage = "A valid date has to be supplied with the tasting note.") ]
         public DateTime Date { get; set; }

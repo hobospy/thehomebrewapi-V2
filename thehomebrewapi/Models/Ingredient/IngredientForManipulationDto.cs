@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using thehomebrewapi.ValidationAttributes;
+using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Models
 {
@@ -12,5 +13,8 @@ namespace thehomebrewapi.Models
         [Required(ErrorMessage = "You need to supply an ingredient amount.")]
         [AmountValueMustBeGreaterThanZeroAttribute(ErrorMessage = "The amount value must be greater than zero.")]
         public double Amount { get; set; }
+
+        [Required(ErrorMessage = "You need to supply a unit of measure for the ingredient.")]
+        public EUnitOfMeasure Unit { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace thehomebrewapi
 {
     public class Startup
     {
+        private readonly string _CorsAllowedOrigins = "CorsAllowedOrigins";
         private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
@@ -32,17 +33,29 @@ namespace thehomebrewapi
         {
             const string PROBLEM_JSON = "application/problems+json";
 
-            services.AddHttpCacheHeaders((expirationModelOptions) =>
+            //services.AddHttpCacheHeaders((expirationModelOptions) =>
+            //{
+            //    expirationModelOptions.MaxAge = 60;
+            //    expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Public;
+            //},
+            //(validateOptions) =>
+            //{
+            //    validateOptions.MustRevalidate = true;
+            //});
+
+            services.AddCors(options =>
             {
-                expirationModelOptions.MaxAge = 60;
-                expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Public;
-            },
-            (validateOptions) =>
-            {
-                validateOptions.MustRevalidate = true;
+                options.AddPolicy(name: _CorsAllowedOrigins,
+                                    builder =>
+                                    {
+                                        builder.WithOrigins("http://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .WithExposedHeaders("Location");
+                                    });
             });
 
-            services.AddResponseCaching();
+            //services.AddResponseCaching();
 
             services.AddControllers(setupAction =>
             {
@@ -103,7 +116,7 @@ namespace thehomebrewapi
                 });
 
             services.Configure<MvcOptions>(config =>
-           {
+            {
                var newtonsoftJsonOutputFormatter = config.OutputFormatters
                .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
 
@@ -111,7 +124,7 @@ namespace thehomebrewapi
                {
                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
                }
-           });
+            });
 
             // Register PropertyMappingService
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
@@ -119,7 +132,8 @@ namespace thehomebrewapi
             var connectionString = _configuration["connectionStrings:homeBrewDBConnectionString"];
             services.AddDbContext<HomeBrewContext>(o =>
             {
-                o.UseSqlServer(connectionString);
+                o.UseSqlite("Data Source=C:\\temp\\homebrew.db");
+                //o.UseSqlServer(connectionString);
             });
 
             services.AddScoped<IHomeBrewRepository, HomeBrewRepository>();
@@ -130,11 +144,14 @@ namespace thehomebrewapi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+#if DEBUG
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(_CorsAllowedOrigins);
             }
-            else
+#else
+            //else
             {
                 app.UseExceptionHandler(appBuilder =>
                 {
@@ -145,16 +162,17 @@ namespace thehomebrewapi
                     });
                 });
             }
+#endif
 
             app.UseStatusCodePages();
 
-            app.UseResponseCaching();
+            //app.UseResponseCaching();
 
-            app.UseHttpCacheHeaders();
+            //app.UseHttpCacheHeaders();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

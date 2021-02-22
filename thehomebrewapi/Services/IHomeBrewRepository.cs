@@ -7,65 +7,80 @@ namespace thehomebrewapi.Services
 {
     public interface IHomeBrewRepository
     {
-        IEnumerable<Recipe> GetRecipes();
-        PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters);
-
-        Recipe GetRecipe(int recipeId, bool includeSteps);
-
-        IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId);
-
-        IEnumerable<Ingredient> GetIngredientsForRecipeStep(int stepId);
-
-        Ingredient GetIngredientForRecipeStep(int stepId, int ingredientId);
-
-        bool RecipeExists(int recipeId);
-
-        bool RecipeStepExists(int stepId);
-
-        bool WaterProfileExists(int waterProfileId);
+        void AddBrew(Brew brew);
 
         public void AddIngredientForRecipeStep(int recipeStepId, Ingredient ingredient);
 
-        void UpdateIngredient(Ingredient ingredient);
-
-        void DeleteIngredient(Ingredient ingredient);
-
         void AddRecipe(Recipe recipe);
-
-        void AddWaterProfile(WaterProfile waterProfile);
-
-        IEnumerable<RecipeStep> GetStepsForRecipe(int recipeId, bool includeIngredients);
-
-        RecipeStep GetRecipeStep(int stepId);
 
         void AddStepForRecipe(int recipeId, RecipeStep recipeStep);
 
+        void AddTastingNote(TastingNote tastingNote);
+
         void AddTimerForRecipeStep(int recipeId, int stepId, Timer timer);
 
-        PagedList<WaterProfile> GetWaterProfiles(WaterProfileResourceParameters waterProfileResourceParameters);
+        void AddWaterProfile(WaterProfile waterProfile);
 
-        WaterProfile GetWaterProfile(int waterProfileId, bool includeAdditions);
+        bool BrewExists(int brewId);
+
+        void DeleteBrew(Brew brew);
+
+        void DeleteIngredient(Ingredient ingredient);
 
         void DeleteRecipe(Recipe recipe);
 
-        void UpdateRecipe(Recipe recipe);
-
-        void UpdateWaterProfile(WaterProfile waterProfile);
+        void DeleteTastingNote(TastingNote tastingNote);
 
         void DeleteWaterProfile(WaterProfile waterProfile);
+
+        Brew GetBrew(int brewId, bool includeAdditionalInfo = false);
 
         PagedList<Brew> GetBrews(BrewsResourceParameters brewsResourceParameters);
 
         IEnumerable<Brew> GetBrews();
 
-        Brew GetBrew(int brewId, bool includeAdditionalInfo = false);
+        Ingredient GetIngredientForRecipeStep(int stepId, int ingredientId);
 
-        void AddBrew(Brew brew);
+        IEnumerable<Ingredient> GetIngredientsForRecipe(int recipeId);
 
-        void DeleteBrew(Brew brew);
+        IEnumerable<Ingredient> GetIngredientsForRecipeStep(int stepId);
+
+        Recipe GetRecipe(int recipeId, bool includeSteps);
+
+        IEnumerable<Recipe> GetRecipes();
+
+        PagedList<Recipe> GetRecipes(RecipesResourceParameters recipesResourceParameters);
+
+        RecipeStep GetRecipeStep(int stepId);
+
+        IEnumerable<RecipeStep> GetStepsForRecipe(int recipeId, bool includeIngredients);
+
+        PagedList<TastingNote> GetTastingNotes(TastingNotesResourceParameters tastingNotesResourceParameters);
+
+        IEnumerable<TastingNote> GetTastingNotes();
+
+        TastingNote GetTastingNote(int brewId, int noteId);
+
+        WaterProfile GetWaterProfile(int waterProfileId, bool includeAdditions);
+
+        PagedList<WaterProfile> GetWaterProfiles(WaterProfileResourceParameters waterProfileResourceParameters);
+
+        bool RecipeExists(int recipeId);
+
+        bool RecipeStepExists(int stepId);
+
+        bool Save();
 
         void UpdateBrew(Brew brew);
 
-        bool Save();
+        void UpdateIngredient(Ingredient ingredient);
+
+        void UpdateRecipe(Recipe recipe);
+
+        void UpdateTastingNote(TastingNote tastingNote);
+
+        void UpdateWaterProfile(WaterProfile waterProfile);
+
+        bool WaterProfileExists(int waterProfileId);
     }
 }

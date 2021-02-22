@@ -46,6 +46,13 @@ namespace thehomebrewapi.Services
                 { "Name", new PropertyMappingValue(new List<string>() { "Name" } ) },
                 { "Description", new PropertyMappingValue(new List<string>() { "Description" } ) }
             };
+        private Dictionary<string, PropertyMappingValue> _tastingNotePropertyMapping =
+            new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+                { "Note", new PropertyMappingValue(new List<string>() { "Note" } ) },
+                { "Date", new PropertyMappingValue(new List<string>() { "Date" } ) }
+            };
 
         private IList<IPropertyMapping> _propertyMappings = new List<IPropertyMapping>();
 
@@ -54,6 +61,7 @@ namespace thehomebrewapi.Services
             _propertyMappings.Add(new PropertyMapping<RecipeDto, Recipe>(_recipePropertyMapping));
             _propertyMappings.Add(new PropertyMapping<BrewDto, Brew>(_brewPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<WaterProfileDto, WaterProfile>(_waterProfilePropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<TastingNoteDto, TastingNote>(_tastingNotePropertyMapping));
         }
 
         public bool ValidMappingExistsFor<TSource, TDestination>(string fields)

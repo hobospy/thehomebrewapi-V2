@@ -8,7 +8,7 @@ namespace thehomebrewapi.ValidationAttributes
     {
         public override bool IsValid(object value)
         {
-            var beerType = (int)value;
+            var beerType = (short)value;
 
             return Enum.IsDefined(typeof(ETypeOfBeer), beerType);
         }

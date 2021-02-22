@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using thehomebrewapi.Helpers;
 
 namespace thehomebrewapi.Profiles
 {
@@ -7,7 +8,9 @@ namespace thehomebrewapi.Profiles
         public IngredientProfile()
         {
             CreateMap<Entities.Ingredient, Models.IngredientDto>();
-            CreateMap<Models.IngredientForCreationDto, Entities.Ingredient>();
+                //.ForMember(src => src.Unit,
+                //           opt => opt.MapFrom(src => src.Unit.ToDescriptionString()));
+            CreateMap<Models.IngredientForCreationDto, Entities.Ingredient>().ReverseMap();
             CreateMap<Models.IngredientForUpdateDto, Entities.Ingredient>().ReverseMap();
         }
     }

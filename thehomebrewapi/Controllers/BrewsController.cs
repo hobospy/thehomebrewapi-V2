@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Marvin.Cache.Headers;
+//using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -18,7 +18,7 @@ namespace thehomebrewapi.Controllers
 {
     [ApiController]
     [Route("api/brews")]
-    [HttpCacheExpiration(CacheLocation = CacheLocation.Private, MaxAge = 300)]
+    //[HttpCacheExpiration(CacheLocation = CacheLocation.Private, MaxAge = 300)]
     public class BrewsController : ExtendedControllerBase
     {
         private readonly IHomeBrewRepository _homebrewRepository;
@@ -39,7 +39,7 @@ namespace thehomebrewapi.Controllers
 
         [HttpGet(Name = "GetBrews")]
         [HttpHead]
-        [HttpCacheExpiration(NoStore = true)]
+        //[HttpCacheExpiration(NoStore = true)]
         public ActionResult<IEnumerable<BrewWithoutAdditionalInfoDto>> GetBrews(
             [FromQuery] BrewsResourceParameters brewsResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -70,8 +70,9 @@ namespace thehomebrewapi.Controllers
             Response.Headers.Add(this.PAGINATION_HEADER,
                 JsonSerializer.Serialize(paginationMetaData));
 
-            var shapedBrews = _mapper.Map<IEnumerable<BrewWithoutAdditionalInfoDto>>(brews).
-                ShapeData(null);
+            var shapedBrews = brewsResourceParameters.IncludeAdditionalInfo ?
+                                                        _mapper.Map<IEnumerable<BrewDto>>(brews).ShapeData(null) :
+                                                        _mapper.Map<IEnumerable<BrewWithoutAdditionalInfoDto>>(brews).ShapeData(null);
 
             if (parsedMediaTypes.Any(pmt => pmt.SubTypeWithoutSuffix.EndsWith(this.HATEOAS, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -229,9 +230,8 @@ namespace thehomebrewapi.Controllers
             {
                 var links = CreateLinksForBrew(brewEntity.Id, includeAdditionalInfo);
 
-                var brewToReturn = _mapper.Map<BrewDto>(brewEntity);
-                var linkedResourceToReturn = brewToReturn.ShapeData(null)
-                    as IDictionary<string, object>;
+                var linkedResourceToReturn = _mapper.Map<BrewDto>(brewEntity)
+                                                .ShapeData(null) as IDictionary<string, object>;
 
                 linkedResourceToReturn.Add(this.LINKS, links);
 
@@ -289,9 +289,8 @@ namespace thehomebrewapi.Controllers
             {
                 var links = CreateLinksForBrew(brewEntity.Id, includeAdditionalInfo);
 
-                var brewToReturn = _mapper.Map<BrewDto>(brewEntity);
-                var linkedResourceToReturn = brewToReturn.ShapeData(null)
-                    as IDictionary<string, object>;
+                var linkedResourceToReturn = _mapper.Map<BrewDto>(brewEntity)
+                                                .ShapeData(null) as IDictionary<string, object>;
 
                 linkedResourceToReturn.Add(this.LINKS, links);
 
@@ -330,6 +329,7 @@ namespace thehomebrewapi.Controllers
             return Ok();
         }
 
+        #region Private functions
         private string CreateBrewResourceUri(
             BrewsResourceParameters brewsResourceParameters,
             ETypeOfResourceUri type)
@@ -417,7 +417,7 @@ namespace thehomebrewapi.Controllers
                     this.GET));
             }
 
-            if (hasNext)
+            if (hasPrevious)
             {
                 links.Add(
                     new LinkDto(CreateBrewResourceUri(
@@ -428,5 +428,6 @@ namespace thehomebrewapi.Controllers
 
             return links;
         }
+        #endregion
     }
 }
