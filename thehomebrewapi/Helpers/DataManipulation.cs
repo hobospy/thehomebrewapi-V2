@@ -5,10 +5,9 @@ using System.Reflection;
 
 namespace thehomebrewapi.Helpers
 {
-    public static class ObjectExtensions
+    public class DataManipulation : IDataManipulation
     {
-        public static ExpandoObject ShapeData<TSource>(this TSource source,
-             string fields)
+        public ExpandoObject ShapeData<TSource>(TSource source, string fields)
         {
             if (source == null)
             {

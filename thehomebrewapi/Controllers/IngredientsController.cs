@@ -27,7 +27,7 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Possibly sould be replaced with a filter/search
+        // Possibly should be replaced with a filter/search
         [HttpGet("/api/recipes/{recipesId}/ingredients")]
         public ActionResult<IEnumerable<IngredientDto>> GetFullRecipeIngredients(int recipesId)
         {

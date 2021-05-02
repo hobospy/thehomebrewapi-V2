@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-//using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -38,7 +37,6 @@ namespace thehomebrewapi.Controllers
 
         [HttpGet(Name = "GetTastingNotes")]
         [HttpHead]
-        //[HttpCacheExpiration(NoStore = true)]
         public ActionResult<IEnumerable<TastingNoteDto>> GetTastingNotes(
             int brewId,
             [FromQuery] TastingNotesResourceParameters tastingNotesResourceParameters,

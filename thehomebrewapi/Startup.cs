@@ -33,16 +33,6 @@ namespace thehomebrewapi
         {
             const string PROBLEM_JSON = "application/problems+json";
 
-            //services.AddHttpCacheHeaders((expirationModelOptions) =>
-            //{
-            //    expirationModelOptions.MaxAge = 60;
-            //    expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Public;
-            //},
-            //(validateOptions) =>
-            //{
-            //    validateOptions.MustRevalidate = true;
-            //});
-
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _CorsAllowedOrigins,
@@ -55,13 +45,9 @@ namespace thehomebrewapi
                                     });
             });
 
-            //services.AddResponseCaching();
-
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.CacheProfiles.Add("240SecondsCacheProfile",
-                    new CacheProfile() { Duration = 240 });
             })
                 .AddNewtonsoftJson(setupAction =>
                 {
@@ -87,7 +73,7 @@ namespace thehomebrewapi
                         var actionExecutingContext =
                             context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
 
-                        // If there are modelstate errros and all arguments were correctly
+                        // If there are model state errors and all arguments were correctly
                         // found/parsed we're dealing with validation errors
                         if ((context.ModelState.ErrorCount > 0) && 
                             (actionExecutingContext?.ActionArguments.Count ==
@@ -103,8 +89,8 @@ namespace thehomebrewapi
                             };
                         }
 
-                        // If one of the arguments wasn't correctly found / couldn't be parsed
-                        // we're deailing with null/unparseable input
+                        // If one of the arguments wasn't correctly found/couldn't be parsed
+                        // we're dealing with null/unparseable input
                         problemDetails.Status = StatusCodes.Status400BadRequest;
                         problemDetails.Title = "One or more errors on input occurred.";
 
@@ -120,20 +106,19 @@ namespace thehomebrewapi
                var newtonsoftJsonOutputFormatter = config.OutputFormatters
                .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
 
-               if (newtonsoftJsonOutputFormatter != null)
-               {
-                   newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
-               }
+                newtonsoftJsonOutputFormatter?.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
             });
 
             // Register PropertyMappingService
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
-            var connectionString = _configuration["connectionStrings:homeBrewDBConnectionString"];
             services.AddDbContext<HomeBrewContext>(o =>
             {
-                o.UseSqlite("Data Source=C:\\temp\\homebrew.db");
-                //o.UseSqlServer(connectionString);
+#if SQLITE
+                o.UseSqlite(_configuration["connectionStrings:sqLiteHomeBrewDBConnectionString"]);
+#else
+                o.UseSqlServer(_configuration["connectionStrings:sqlHomeBrewDBConnectionString"]);
+#endif
             });
 
             services.AddScoped<IHomeBrewRepository, HomeBrewRepository>();
@@ -144,14 +129,12 @@ namespace thehomebrewapi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-#if DEBUG
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(_CorsAllowedOrigins);
             }
-#else
-            //else
+            else
             {
                 app.UseExceptionHandler(appBuilder =>
                 {
@@ -162,14 +145,8 @@ namespace thehomebrewapi
                     });
                 });
             }
-#endif
 
             app.UseStatusCodePages();
-
-            //app.UseResponseCaching();
-
-            //app.UseHttpCacheHeaders();
-
             app.UseRouting();
 
             //app.UseAuthorization();
