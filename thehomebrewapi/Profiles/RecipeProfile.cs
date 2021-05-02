@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using thehomebrewapi.Helpers;
-using static thehomebrewapi.Entities.Enumerations;
 
 namespace thehomebrewapi.Profiles
 {

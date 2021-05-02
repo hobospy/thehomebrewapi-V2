@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using thehomebrewapi.Helpers;
 
 namespace thehomebrewapi.Profiles
 {
