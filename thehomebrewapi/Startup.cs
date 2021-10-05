@@ -140,7 +140,7 @@ namespace thehomebrewapi
                 app.UseDeveloperExceptionPage();
                 app.UseCors(_CorsAllowedOrigins);
             }
-            else
+#else
             {
                 app.UseExceptionHandler(appBuilder =>
                 {
@@ -151,11 +151,10 @@ namespace thehomebrewapi
                     });
                 });
             }
+#endif
 
             app.UseStatusCodePages();
             app.UseRouting();
-
-            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

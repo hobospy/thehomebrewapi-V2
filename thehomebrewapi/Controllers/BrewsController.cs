@@ -48,7 +48,7 @@ namespace thehomebrewapi.Controllers
             }
 
             var splitMediaTypes = mediaTypes.Split(',');
-            if(!MediaTypeHeaderValue.TryParseList(splitMediaTypes,
+            if (!MediaTypeHeaderValue.TryParseList(splitMediaTypes,
                 out IList<MediaTypeHeaderValue> parsedMediaTypes))
             {
                 return BadRequest();
@@ -129,7 +129,7 @@ namespace thehomebrewapi.Controllers
                 return Ok(linkedResourceToReturn);
             }
 
-            return includeAdditionalInfo ? 
+            return includeAdditionalInfo ?
                 Ok(_mapper.Map<BrewDto>(brew).ShapeData(null)) :
                 Ok(_mapper.Map<BrewWithoutAdditionalInfoDto>(brew).ShapeData(null));
         }
@@ -327,6 +327,7 @@ namespace thehomebrewapi.Controllers
         }
 
         #region Private functions
+
         private string CreateBrewResourceUri(
             BrewsResourceParameters brewsResourceParameters,
             ETypeOfResourceUri type)
@@ -347,6 +348,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", brewsResourceParameters.SearchQuery);
 
                     return Url.Link("GetBrews", linkProps);
+
                 case ETypeOfResourceUri.NextPage:
                     linkProps.Add("orderBy", brewsResourceParameters.OrderBy);
                     linkProps.Add("pageNumber", brewsResourceParameters.PageNumber + 1);
@@ -354,6 +356,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", brewsResourceParameters.SearchQuery);
 
                     return Url.Link("GetBrews", linkProps);
+
                 case ETypeOfResourceUri.Current:
                 default:
                     linkProps.Add("orderBy", brewsResourceParameters.OrderBy);
@@ -425,6 +428,7 @@ namespace thehomebrewapi.Controllers
 
             return links;
         }
-        #endregion
+
+        #endregion Private functions
     }
 }
