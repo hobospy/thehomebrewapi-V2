@@ -33,6 +33,8 @@ namespace thehomebrewapi
 #if DEBUG
                         context.Database.EnsureDeleted();
                         context.Database.Migrate();
+#else
+                        context.Database.EnsureCreated();
 #endif
                     }
                     catch(Exception ex)

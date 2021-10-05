@@ -26,7 +26,7 @@ namespace thehomebrewapi
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -38,7 +38,7 @@ namespace thehomebrewapi
                 options.AddPolicy(name: _CorsAllowedOrigins,
                                     builder =>
                                     {
-                                        builder.WithOrigins("http://localhost:3000")
+                                        builder.WithOrigins("http://localhost:3000", "http://homebrew-react-app.s3-ap-southeast-2.amazonaws.com")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod()
                                         .WithExposedHeaders("Location");
@@ -55,58 +55,61 @@ namespace thehomebrewapi
                         new CamelCasePropertyNamesContractResolver();
                 })
                 .AddXmlDataContractSerializerFormatters()
-                .ConfigureApiBehaviorOptions( setupAction =>
-                {
-                    setupAction.InvalidModelStateResponseFactory = context =>
-                    {
-                        // Create a problem details object
-                        var problemDetailsFactory = context.HttpContext.RequestServices
-                        .GetRequiredService<ProblemDetailsFactory>();
-                        var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(
-                            context.HttpContext,
-                            context.ModelState);
+                .ConfigureApiBehaviorOptions(setupAction =>
+               {
+                   setupAction.InvalidModelStateResponseFactory = context =>
+                   {
+                       // Create a problem details object
+                       var problemDetailsFactory = context.HttpContext.RequestServices
+                      .GetRequiredService<ProblemDetailsFactory>();
+                       var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(
+                           context.HttpContext,
+                           context.ModelState);
 
-                        // Add additional info not added by default
-                        problemDetails.Detail = "See the errors field for details.";
-                        problemDetails.Instance = context.HttpContext.Request.Path;
+                       // Add additional info not added by default
+                       problemDetails.Detail = "See the errors field for details.";
+                       problemDetails.Instance = context.HttpContext.Request.Path;
 
-                        var actionExecutingContext =
-                            context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
+                       var actionExecutingContext =
+                           context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
 
-                        // If there are model state errors and all arguments were correctly
-                        // found/parsed we're dealing with validation errors
-                        if ((context.ModelState.ErrorCount > 0) && 
-                            (actionExecutingContext?.ActionArguments.Count ==
-                            context.ActionDescriptor.Parameters.Count))
-                        {
-                            problemDetails.Type = "insert http link here for help page";
-                            problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
-                            problemDetails.Title = "One or more validation errors occurred.";
+                       // If there are modelstate errros and all arguments were correctly
+                       // found/parsed we're dealing with validation errors
+                       if ((context.ModelState.ErrorCount > 0) &&
+                          (actionExecutingContext?.ActionArguments.Count ==
+                          context.ActionDescriptor.Parameters.Count))
+                       {
+                           problemDetails.Type = "insert http link here for help page";
+                           problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
+                           problemDetails.Title = "One or more validation errors occurred.";
 
-                            return new UnprocessableEntityObjectResult(problemDetails)
-                            {
-                                ContentTypes = { PROBLEM_JSON }
-                            };
-                        }
+                           return new UnprocessableEntityObjectResult(problemDetails)
+                           {
+                               ContentTypes = { PROBLEM_JSON }
+                           };
+                       }
 
-                        // If one of the arguments wasn't correctly found/couldn't be parsed
-                        // we're dealing with null/unparseable input
-                        problemDetails.Status = StatusCodes.Status400BadRequest;
-                        problemDetails.Title = "One or more errors on input occurred.";
+                       // If one of the arguments wasn't correctly found / couldn't be parsed
+                       // we're deailing with null/unparseable input
+                       problemDetails.Status = StatusCodes.Status400BadRequest;
+                       problemDetails.Title = "One or more errors on input occurred.";
 
-                        return new BadRequestObjectResult(problemDetails)
-                        {
-                            ContentTypes = { PROBLEM_JSON }
-                        };
-                    };
-                });
+                       return new BadRequestObjectResult(problemDetails)
+                       {
+                           ContentTypes = { PROBLEM_JSON }
+                       };
+                   };
+               });
 
             services.Configure<MvcOptions>(config =>
             {
-               var newtonsoftJsonOutputFormatter = config.OutputFormatters
-               .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
+                var newtonsoftJsonOutputFormatter = config.OutputFormatters
+                .OfType<NewtonsoftJsonOutputFormatter>().FirstOrDefault();
 
-                newtonsoftJsonOutputFormatter?.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
+                if (newtonsoftJsonOutputFormatter != null)
+                {
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add(_configuration["homeBrewApiMediaTypes:hateoas"]);
+                }
             });
 
             // Register PropertyMappingService
@@ -114,10 +117,10 @@ namespace thehomebrewapi
 
             services.AddDbContext<HomeBrewContext>(o =>
             {
-#if SQLITE
-                o.UseSqlite(_configuration["connectionStrings:sqLiteHomeBrewDBConnectionString"]);
+#if DEBUG
+                o.UseSqlServer(_configuration["connectionStrings:homeBrewDBConnectionString"]);
 #else
-                o.UseSqlServer(_configuration["connectionStrings:sqlHomeBrewDBConnectionString"]);
+                o.UseSqlite("Data Source=C:\\temp\\homebrew.db");
 #endif
             });
 
@@ -129,7 +132,10 @@ namespace thehomebrewapi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseCors(_CorsAllowedOrigins);
+
+            //if (env.IsDevelopment())
+#if DEBUG
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(_CorsAllowedOrigins);
