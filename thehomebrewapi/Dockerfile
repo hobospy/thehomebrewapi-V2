@@ -7,7 +7,7 @@
 
 # docker build -t homebrewapi-image .
 # docker run -d -p 5000:59607 --name myhomebrewapi homebrewapi-image
-# default linux Docker subnet: 192.168.65.0/24
+# docker-compose up
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /app
