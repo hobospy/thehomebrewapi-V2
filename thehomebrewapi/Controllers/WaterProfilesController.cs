@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -34,8 +35,14 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
+        /// <summary>
+        /// Gets a list of water profiles
+        /// </summary>
         [HttpGet(Name = "GetWaterProfiles")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<WaterProfileDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<IDictionary<string, object>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<WaterProfileDto>> GetWaterProfiles(
             [FromQuery] WaterProfileResourceParameters waterProfileResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -95,7 +102,16 @@ namespace thehomebrewapi.Controllers
             return Ok(shapedWaterProfiles);
         }
 
+        /// <summary>
+        /// Get the water profile specified by the supplied ID, can optionally include additions that
+        /// create the returned profile
+        /// </summary>
         [HttpGet("{id}", Name = "GetWaterProfile")]
+        [ProducesResponseType(typeof(IEnumerable<WaterProfileDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<WaterProfileWithoutAdditionsDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetWaterProfile(int id,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes,
             bool includeAdditions = false)
@@ -133,7 +149,13 @@ namespace thehomebrewapi.Controllers
                 Ok(_mapper.Map<WaterProfileWithoutAdditionsDto>(waterProfile).ShapeData(null));
         }
 
+        /// <summary>
+        /// Create a new water profile
+        /// </summary>
         [HttpPost(Name = "CreateWaterProfile")]
+        [ProducesResponseType(typeof(WaterProfileDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<WaterProfileDto> CreateWaterProfile([FromBody] WaterProfileForCreationDto waterProfile,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
@@ -173,7 +195,15 @@ namespace thehomebrewapi.Controllers
                 waterProfileToReturn);
         }
 
+        /// <summary>
+        /// Updates an existing water profile based on the water profile ID, the water profile model
+        /// supplied is what is pushed into the persistent storage.
+        /// </summary>
         [HttpPut("{id}", Name = "UpdateWaterProfile")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult UpdateWaterProfile(int id,
             [FromBody] WaterProfileForUpdateDto waterProfile,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -212,7 +242,15 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates an existing water profile based on the water profile id, only the properties supplied
+        /// will be updated
+        /// </summary>
         [HttpPatch("{id}", Name = "PartiallyUpdateWaterProfile")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult PartialUpdateWaterProfile(int id,
             [FromBody] JsonPatchDocument<WaterProfileForUpdateDto> patchDoc,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -265,7 +303,12 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the water profile with the supplied water profile ID
+        /// </summary>
         [HttpDelete("{id}", Name = "DeleteWaterProfile")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteWaterProfile(int id)
         {
             var waterProfileEntity = _homeBrewRepository.GetWaterProfile(id, false);
@@ -298,6 +341,7 @@ namespace thehomebrewapi.Controllers
         }
 
         #region Private methods
+
         private IEnumerable<LinkDto> CreateLinksForWaterProfile(int id, bool includeAdditions)
         {
             var links = new List<LinkDto>();
@@ -363,7 +407,7 @@ namespace thehomebrewapi.Controllers
             WaterProfileResourceParameters waterProfileResourceParameters,
             ETypeOfResourceUri type)
         {
-            switch(type)
+            switch (type)
             {
                 case ETypeOfResourceUri.PreviousPage:
                     return Url.Link("GetWaterProfiles", new
@@ -373,6 +417,7 @@ namespace thehomebrewapi.Controllers
                         pageSize = waterProfileResourceParameters.PageSize,
                         searchQuery = waterProfileResourceParameters.SearchQuery
                     });
+
                 case ETypeOfResourceUri.NextPage:
                     return Url.Link("GetWaterProfiles", new
                     {
@@ -381,6 +426,7 @@ namespace thehomebrewapi.Controllers
                         pageSize = waterProfileResourceParameters.PageSize,
                         searchQuery = waterProfileResourceParameters.SearchQuery
                     });
+
                 case ETypeOfResourceUri.Current:
                 default:
                     return Url.Link("GetWaterProfiles", new
@@ -392,6 +438,7 @@ namespace thehomebrewapi.Controllers
                     });
             }
         }
-        #endregion
+
+        #endregion Private methods
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -35,8 +36,13 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
+        /// <summary>
+        /// Gets a list of recipes
+        /// </summary>
         [HttpGet(Name = "GetRecipes")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<RecipeWithoutStepsDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<RecipeWithoutStepsDto>> GetRecipes(
             [FromQuery] RecipesResourceParameters recipesResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -96,7 +102,14 @@ namespace thehomebrewapi.Controllers
             return Ok(shapedRecipes);
         }
 
+        /// <summary>
+        /// Get the recipe specified by the supplied ID
+        /// </summary>
         [HttpGet("{id}", Name = "GetRecipe")]
+        [ProducesResponseType(typeof(RecipeWithoutStepsDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RecipeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetRecipe(int id,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes,
             bool includeSteps = false)
@@ -134,7 +147,12 @@ namespace thehomebrewapi.Controllers
                 Ok(_mapper.Map<RecipeWithoutStepsDto>(recipe).ShapeData(null));
         }
 
+        /// <summary>
+        /// Create a new recipe
+        /// </summary>
         [HttpPost(Name = "CreateRecipe")]
+        [ProducesResponseType(typeof(RecipeDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<RecipeDto> CreateRecipe([FromBody] RecipeForCreationDto recipe,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
@@ -187,7 +205,15 @@ namespace thehomebrewapi.Controllers
                     recipeToReturn);
         }
 
+        /// <summary>
+        /// Updates an existing recipe based on the recipe id, the recipe model supplied is what
+        /// is pushed into the persistent storage.
+        /// </summary>
         [HttpPut("{id}", Name = "UpdateRecipe")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult UpdateRecipe(int id,
             [FromBody] RecipeForUpdateDto recipe,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -238,7 +264,15 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates an existing recipe based on the recipe id, only the properties supplied will
+        /// be updated
+        /// </summary>
         [HttpPatch("{id}", Name = "PartiallyUpdateRecipe")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult PartiallyUpdateRecipe(int id,
             [FromBody] JsonPatchDocument<RecipeForUpdateDto> patchDoc,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -298,7 +332,12 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}", Name = "DeleteRecipe" )]
+        /// <summary>
+        /// Deletes the recipe with the supplied recipe id including all steps and ingredients.
+        /// </summary>
+        [HttpDelete("{id}", Name = "DeleteRecipe")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteRecipe(int id)
         {
             var recipeEntity = _homeBrewRepository.GetRecipe(id, false);
@@ -330,6 +369,7 @@ namespace thehomebrewapi.Controllers
         }
 
         #region Private functions
+
         private IEnumerable<LinkDto> CreateLinksForRecipe(int id, bool includeSteps)
         {
             var links = new List<LinkDto>();
@@ -411,6 +451,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", recipesResourceParameters.SearchQuery);
 
                     return Url.Link("GetBrews", linkProps);
+
                 case ETypeOfResourceUri.NextPage:
                     linkProps.Add("orderBy", recipesResourceParameters.OrderBy);
                     linkProps.Add("pageNumber", recipesResourceParameters.PageNumber + 1);
@@ -418,6 +459,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", recipesResourceParameters.SearchQuery);
 
                     return Url.Link("GetBrews", linkProps);
+
                 case ETypeOfResourceUri.Current:
                 default:
                     linkProps.Add("orderBy", recipesResourceParameters.OrderBy);
@@ -428,6 +470,7 @@ namespace thehomebrewapi.Controllers
                     return Url.Link("GetBrews", linkProps);
             }
         }
-        #endregion
+
+        #endregion Private functions
     }
 }

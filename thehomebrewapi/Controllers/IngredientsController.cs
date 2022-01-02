@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,8 +28,14 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Possibly should be replaced with a filter/search
+        // TODO: Possibly should be replaced with a filter/search
+        /// <summary>
+        /// Gets all ingredients for the specified recipe
+        /// </summary>
         [HttpGet("/api/recipes/{recipesId}/ingredients")]
+        [ProducesResponseType(typeof(IEnumerable<IngredientDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<IngredientDto>> GetFullRecipeIngredients(int recipesId)
         {
             try
@@ -50,7 +57,12 @@ namespace thehomebrewapi.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets ingredients for the specified recipe step
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<IngredientDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<IngredientDto>> GetIngredients(int recipeId, int recipeStepId)
         {
             try
@@ -70,7 +82,7 @@ namespace thehomebrewapi.Controllers
                 }
 
                 var ingredientsForRecipe = _homeBrewRepository.GetIngredientsForRecipeStep(recipeStepId);
-                
+
                 return Ok(_mapper.Map<IEnumerable<IngredientDto>>(ingredientsForRecipe));
             }
             catch (Exception ex)
@@ -80,7 +92,12 @@ namespace thehomebrewapi.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the ingredient details for the specified ingredent within a specified recipe step
+        /// </summary>
         [HttpGet("{id}", Name = "GetIngredient")]
+        [ProducesResponseType(typeof(IngredientDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IngredientDto> GetIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
@@ -106,7 +123,12 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<IngredientDto>(ingredient));
         }
 
+        /// <summary>
+        /// Create an ingredient to associate with the specified recipe step
+        /// </summary>
         [HttpPost]
+        [ProducesResponseType(typeof(IngredientDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IngredientDto> CreateIngredient(int recipeStepId,
             [FromBody] IngredientForCreationDto ingredient)
         {
@@ -129,7 +151,13 @@ namespace thehomebrewapi.Controllers
                 createdIngredientToReturn);
         }
 
+        /// <summary>
+        /// Updates an existing ingredient based on the recipe, recipe step and ingredient id, the
+        /// ingredient model supplied is what is pushed into the persistent storage.
+        /// </summary>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult UpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] IngredientForUpdateDto ingredient)
         {
@@ -159,7 +187,14 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates an existing ingredient based on the recipe, recipe step and ingredient id,
+        /// only the properties supplied will be updated
+        /// </summary>
         [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult PartiallyUpdateIngredient(int recipeId, int recipeStepId, int id,
             [FromBody] JsonPatchDocument<IngredientForUpdateDto> patchDoc)
         {
@@ -201,7 +236,12 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the ingredient with the supplied recipe, recipe step and ingredient id
+        /// </summary>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteIngredient(int recipeId, int recipeStepId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))

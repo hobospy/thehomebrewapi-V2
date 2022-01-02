@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -35,8 +36,14 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
+        /// <summary>
+        /// Gets a list of tasting notes associated with the supplied brew
+        /// </summary>
         [HttpGet(Name = "GetTastingNotes")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<TastingNoteDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<IDictionary<string, object>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<TastingNoteDto>> GetTastingNotes(
             int brewId,
             [FromQuery] TastingNotesResourceParameters tastingNotesResourceParameters,
@@ -98,7 +105,14 @@ namespace thehomebrewapi.Controllers
             return Ok(shapedTastingNotes);
         }
 
+        /// <summary>
+        /// Gets the tasting note associated with the supplied brew and note ID
+        /// </summary>
         [HttpGet("{id}", Name = "GetTastingNote")]
+        [ProducesResponseType(typeof(TastingNoteDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetTastingNote(int brewId, int id,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
@@ -135,7 +149,14 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<TastingNoteDto>(tastingNote).ShapeData(null));
         }
 
+        /// <summary>
+        /// Create a new tasting note to be associated with the supplied brew ID
+        /// </summary>
         [HttpPost(Name = "CreateTastingNote")]
+        [ProducesResponseType(typeof(TastingNoteDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<TastingNoteDto> CreateTastingNote(int brewId,
             [FromBody] TastingNoteForCreationDto tastingNote,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -181,7 +202,15 @@ namespace thehomebrewapi.Controllers
                     tastingNoteToReturn);
         }
 
+        /// <summary>
+        /// Updates an existing tasting note based on the brew and tasting note ID, the tasting note
+        /// model supplied is what is pushed into the persistent storage.
+        /// </summary>
         [HttpPut("{id}", Name = "UpdateTastingNote")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult UpdateTastingNote(int brewId,
             int id,
             [FromBody] TastingNoteForUpdateDto tastingNote,
@@ -225,7 +254,15 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates an existing tasting note based on the brew and tasting note ID, only
+        /// the properties supplied will be updated
+        /// </summary>
         [HttpPatch("{id}", Name = "PartiallyUpdateTastingNote")]
+        [ProducesResponseType(typeof(IDictionary<string, object>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult PartiallyUpdateTastingNote(int brewId,
             int id,
             [FromBody] JsonPatchDocument<TastingNoteForUpdateDto> patchDoc,
@@ -289,7 +326,12 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the tasting note with the supplied brew and tasting note ID
+        /// </summary>
         [HttpDelete("{id}", Name = "DeleteTastingNote")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteTastingNote(int brewId, int id)
         {
             if (!_homebrewRepository.BrewExists(brewId))
@@ -324,13 +366,14 @@ namespace thehomebrewapi.Controllers
         }
 
         #region Private functions
+
         private string CreateTastingNotesResourceUri(
             TastingNotesResourceParameters tastingNotesResourceParameters,
             ETypeOfResourceUri type)
         {
             var linkProps = new ExpandoObject() as IDictionary<string, Object>;
 
-            switch(type)
+            switch (type)
             {
                 case ETypeOfResourceUri.PreviousPage:
                     linkProps.Add("orderBy", tastingNotesResourceParameters.OrderBy);
@@ -339,6 +382,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", tastingNotesResourceParameters.SearchQuery);
 
                     return Url.Link("GetTastingNotes", linkProps);
+
                 case ETypeOfResourceUri.NextPage:
                     linkProps.Add("orderBy", tastingNotesResourceParameters.OrderBy);
                     linkProps.Add("pageNumber", tastingNotesResourceParameters.PageNumber + 1);
@@ -346,6 +390,7 @@ namespace thehomebrewapi.Controllers
                     linkProps.Add("searchQuery", tastingNotesResourceParameters.SearchQuery);
 
                     return Url.Link("GetTastingNotes", linkProps);
+
                 case ETypeOfResourceUri.Current:
                 default:
                     linkProps.Add("orderBy", tastingNotesResourceParameters.OrderBy);
@@ -417,6 +462,7 @@ namespace thehomebrewapi.Controllers
 
             return links;
         }
-        #endregion
+
+        #endregion Private functions
     }
 }

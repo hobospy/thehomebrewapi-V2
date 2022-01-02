@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,14 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
+        /// <summary>
+        /// Gets a list of steps associated with the supplied recipe ID.  Ingredients can optionally
+        /// be included
+        /// </summary>
         [HttpGet(Name = "GetRecipeSteps")]
+        [ProducesResponseType(typeof(IEnumerable<RecipeStepDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<RecipeStepWithoutIngredientsDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetRecipeSteps(int recipeId, bool includeIngredients = false)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
@@ -40,7 +48,12 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<IEnumerable<RecipeStepWithoutIngredientsDto>>(stepsForRecipe));
         }
 
+        /// <summary>
+        /// Gets a recipe step (including ingredients) from the supplied recipe and step ID.
+        /// </summary>
         [HttpGet("{id}", Name = "GetRecipeStep")]
+        [ProducesResponseType(typeof(IEnumerable<RecipeStepDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<RecipeStepDto> GetRecipeStep(int recipeId, int id)
         {
             if (!_homeBrewRepository.RecipeExists(recipeId))
@@ -57,7 +70,12 @@ namespace thehomebrewapi.Controllers
             return Ok(_mapper.Map<RecipeStepDto>(recipeStep));
         }
 
+        /// <summary>
+        /// Create a new recipe step to be associated with the supplied recipe
+        /// </summary>
         [HttpPost(Name = "CreateRecipeStep")]
+        [ProducesResponseType(typeof(RecipeDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<RecipeStepDto> CreateRecipeStep(int recipeId,
             [FromBody] RecipeStepForCreationDto recipeStep)
         {
