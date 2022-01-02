@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using thehomebrewapi.Helpers;
 using thehomebrewapi.Models;
@@ -9,7 +10,11 @@ namespace thehomebrewapi.Controllers
     [Route("api")]
     public class RootController : ExtendedControllerBase
     {
+        /// <summary>
+        /// Details out the various endpoints associated with the homebrew API
+        /// </summary>
         [HttpGet(Name = "GetRoot")]
+        [ProducesResponseType(typeof(List<LinkDto>), StatusCodes.Status200OK)]
         public IActionResult GetRoot()
         {
             // Create links for root

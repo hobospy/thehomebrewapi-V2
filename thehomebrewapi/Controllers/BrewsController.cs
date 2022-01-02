@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -16,6 +17,7 @@ using static thehomebrewapi.Entities.Enumerations;
 namespace thehomebrewapi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/brews")]
     public class BrewsController : ExtendedControllerBase
     {
@@ -35,8 +37,16 @@ namespace thehomebrewapi.Controllers
                 throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
+        /// <summary>
+        /// Gets a list of brews.  Optionally supply properties specifying whether you want to have
+        /// additional properties returned (the recipe the brew is based on and any associated
+        /// tasting notes) along with any filters.
+        /// </summary>
         [HttpGet(Name = "GetBrews")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<BrewDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<BrewWithoutAdditionalInfoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<BrewWithoutAdditionalInfoDto>> GetBrews(
             [FromQuery] BrewsResourceParameters brewsResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -97,7 +107,16 @@ namespace thehomebrewapi.Controllers
             return Ok(shapedBrews);
         }
 
+        /// <summary>
+        /// Get the brew associated with the supplied id.  Optionally supply a boolean value indicating
+        /// whether you want to include additional properties (the recipe the brew is based on and any
+        /// associated tasting notes).
+        /// </summary>
         [HttpGet("{id}", Name = "GetBrew")]
+        [ProducesResponseType(typeof(BrewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BrewWithoutAdditionalInfoDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetBrew(int id,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes,
             bool includeAdditionalInfo = false)
@@ -134,7 +153,12 @@ namespace thehomebrewapi.Controllers
                 Ok(_mapper.Map<BrewWithoutAdditionalInfoDto>(brew).ShapeData(null));
         }
 
+        /// <summary>
+        /// Create a new brew based on an existing recipe
+        /// </summary>
         [HttpPost(Name = "CreateBrew")]
+        [ProducesResponseType(typeof(BrewDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<BrewDto> CreateBrew([FromBody] BrewForCreationDto brew,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
@@ -188,7 +212,15 @@ namespace thehomebrewapi.Controllers
                 brewToReturn);
         }
 
+        /// <summary>
+        /// Updates an existing brew based on the brew id, the brew model supplied is what is pushed into the
+        /// persistent storage.
+        /// </summary>
         [HttpPut("{id}", Name = "UpdateBrew")]
+        [ProducesResponseType(typeof(BrewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult UpdateBrew(int id,
             [FromBody] BrewForUpdateDto brew,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
@@ -238,6 +270,9 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates an existing brew based on the brew id, only the properties supplied will be updated
+        /// </summary>
         [HttpPatch("{id}", Name = "PartiallyUpdateBrew")]
         public ActionResult PartiallyUpdateBrew(int id,
             [FromBody] JsonPatchDocument<BrewForUpdateDto> patchDoc,
@@ -297,7 +332,12 @@ namespace thehomebrewapi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the brew with the supplied id
+        /// </summary>
         [HttpDelete("{id}", Name = "DeleteBrew")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteBrew(int id)
         {
             var brewEntity = _homebrewRepository.GetBrew(id, false);

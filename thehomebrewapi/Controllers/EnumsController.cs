@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using static thehomebrewapi.Entities.Enumerations;
 namespace thehomebrewapi.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/enums")]
     public class EnumsController : ExtendedControllerBase
     {
@@ -21,14 +23,23 @@ namespace thehomebrewapi.Controllers
                                                 nameof(EBrewedState)
                                             };
 
+        /// <summary>
+        /// Get the list of enums used by the homebrew API
+        /// </summary>
         [HttpGet(Name = "GetEnums")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<string>> GetEnums()
         {
             return Ok(_availableEnums);
         }
 
+        /// <summary>
+        /// Get the values for the specified enum
+        /// </summary>
         [HttpGet("{enumType}")]
+        [ProducesResponseType(typeof(IEnumerable<EnumDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<IEnumerable<EnumDto>> GetEnumDetails(string enumType)
         {
             if (!_availableEnums.Contains(enumType, StringComparer.InvariantCultureIgnoreCase))

@@ -9,10 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using thehomebrewapi.Contexts;
+using thehomebrewapi.Helpers;
 using thehomebrewapi.Services;
 
 namespace thehomebrewapi
@@ -101,6 +105,28 @@ namespace thehomebrewapi
                    };
                });
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+                                   new OpenApiInfo
+                                   {
+                                       Title = "The HomeBrew API",
+                                       Version = "v1",
+                                       Description = "API used to store homebrew information including water profiles, recipes and brewing history.",
+                                       Contact = new OpenApiContact
+                                       {
+                                           Name = "Christopher Clarke"
+                                       },
+                                   });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+                options.DocumentFilter<SwaggerDocumentFilter>();
+                options.OrderActionsBy((apiDesc) => $"{apiDesc.GroupName}");
+            }
+            );
+
             services.Configure<MvcOptions>(config =>
             {
                 var newtonsoftJsonOutputFormatter = config.OutputFormatters
@@ -118,9 +144,9 @@ namespace thehomebrewapi
             services.AddDbContext<HomeBrewContext>(o =>
             {
 #if DEBUG
-                o.UseSqlServer(_configuration["connectionStrings:homeBrewDBConnectionString"]);
+                o.UseSqlServer(_configuration["connectionStrings:sqlHomeBrewDBConnectionString"]);
 #else
-                o.UseSqlite("Data Source=C:\\temp\\homebrew.db");
+                o.UseSqlite(_configuration["connectionStrings:sqLiteHomeBrewDBConnectionString"]);
 #endif
             });
 
@@ -154,6 +180,10 @@ namespace thehomebrewapi
 #endif
 
             app.UseStatusCodePages();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "theHomeBrewApi v1"));
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
