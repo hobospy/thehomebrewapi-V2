@@ -18,3 +18,7 @@ thehomebrewapi allows for storing and retrieving of homebrew recipes. It has rep
   - The second one places it behind a [NGINX](https://hub.docker.com/_/nginx) proxy)
 
 - Check the api is up and running by navigating to `localhost:4004/api/recipes`
+- If you want to change the initial data, update the configuration in HomeBrewContext.cs, delete the InitialMigration file a then run the following command in Package Manager Console (the results can be viewed using the SQL Server Object Explorer)
+
+      add-migration InitialMigration
+      Update-Database

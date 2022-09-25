@@ -44,14 +44,14 @@ namespace thehomebrewapi.Controllers
         /// </summary>
         [HttpGet(Name = "GetBrews")]
         [HttpHead]
+        [ProducesResponseType(typeof(IEnumerable<BrewFullAdditionalInfoDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<BrewDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(IEnumerable<BrewWithoutAdditionalInfoDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<IEnumerable<BrewWithoutAdditionalInfoDto>> GetBrews(
+        public ActionResult<IEnumerable<BrewDto>> GetBrews(
             [FromQuery] BrewsResourceParameters brewsResourceParameters,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
-            if (!_propertyMappingService.ValidMappingExistsFor<BrewDto, Entities.Brew>
+            if (!_propertyMappingService.ValidMappingExistsFor<BrewFullAdditionalInfoDto, Entities.Brew>
                 (brewsResourceParameters.OrderBy))
             {
                 return BadRequest();
@@ -77,9 +77,22 @@ namespace thehomebrewapi.Controllers
             Response.Headers.Add(this.PAGINATION_HEADER,
                 JsonSerializer.Serialize(paginationMetaData));
 
-            var shapedBrews = brewsResourceParameters.IncludeAdditionalInfo ?
-                                                        _mapper.Map<IEnumerable<BrewDto>>(brews).ShapeData(null) :
-                                                        _mapper.Map<IEnumerable<BrewWithoutAdditionalInfoDto>>(brews).ShapeData(null);
+            IEnumerable<ExpandoObject> shapedBrews;
+
+            switch (brewsResourceParameters.IncludeAdditionalInfo)
+            {
+                case ETypeOfAdditionalInfo.Basic:
+                    shapedBrews = _mapper.Map<IEnumerable<BrewBasicAdditionalInfoDto>>(brews).ShapeData(null);
+                    break;
+
+                case ETypeOfAdditionalInfo.Full:
+                    shapedBrews = _mapper.Map<IEnumerable<BrewFullAdditionalInfoDto>>(brews).ShapeData(null);
+                    break;
+
+                default:
+                    shapedBrews = _mapper.Map<IEnumerable<BrewDto>>(brews).ShapeData(null);
+                    break;
+            }
 
             if (parsedMediaTypes.Any(pmt => pmt.SubTypeWithoutSuffix.EndsWith(this.HATEOAS, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -113,8 +126,8 @@ namespace thehomebrewapi.Controllers
         /// associated tasting notes).
         /// </summary>
         [HttpGet("{id}", Name = "GetBrew")]
+        [ProducesResponseType(typeof(BrewFullAdditionalInfoDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BrewDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BrewWithoutAdditionalInfoDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetBrew(int id,
@@ -140,8 +153,8 @@ namespace thehomebrewapi.Controllers
                 var links = CreateLinksForBrew(id, includeAdditionalInfo);
 
                 var linkedResourceToReturn = includeAdditionalInfo ?
-                    _mapper.Map<BrewDto>(brew).ShapeData(null) as IDictionary<string, object> :
-                    _mapper.Map<BrewWithoutAdditionalInfoDto>(brew).ShapeData(null) as IDictionary<string, object>;
+                    _mapper.Map<BrewFullAdditionalInfoDto>(brew).ShapeData(null) as IDictionary<string, object> :
+                    _mapper.Map<BrewDto>(brew).ShapeData(null) as IDictionary<string, object>;
 
                 linkedResourceToReturn.Add(this.LINKS, links);
 
@@ -149,17 +162,17 @@ namespace thehomebrewapi.Controllers
             }
 
             return includeAdditionalInfo ?
-                Ok(_mapper.Map<BrewDto>(brew).ShapeData(null)) :
-                Ok(_mapper.Map<BrewWithoutAdditionalInfoDto>(brew).ShapeData(null));
+                Ok(_mapper.Map<BrewFullAdditionalInfoDto>(brew).ShapeData(null)) :
+                Ok(_mapper.Map<BrewDto>(brew).ShapeData(null));
         }
 
         /// <summary>
         /// Create a new brew based on an existing recipe
         /// </summary>
         [HttpPost(Name = "CreateBrew")]
-        [ProducesResponseType(typeof(BrewDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BrewFullAdditionalInfoDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<BrewDto> CreateBrew([FromBody] BrewForCreationDto brew,
+        public ActionResult<BrewFullAdditionalInfoDto> CreateBrew([FromBody] BrewForCreationDto brew,
             [FromHeader(Name = ExtendedControllerBase.ACCEPT)] string mediaTypes)
         {
             var splitMediaTypes = mediaTypes.Split(',');
@@ -189,7 +202,7 @@ namespace thehomebrewapi.Controllers
             finalBrew.Recipe = _homebrewRepository.GetRecipe(brew.RecipeId, includeSteps);
             _homebrewRepository.Save();
 
-            var brewToReturn = _mapper.Map<Models.BrewDto>(finalBrew);
+            var brewToReturn = _mapper.Map<BrewFullAdditionalInfoDto>(finalBrew);
 
             if (parsedMediaTypes.Any(pmt => pmt.SubTypeWithoutSuffix.EndsWith(this.HATEOAS, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -217,7 +230,7 @@ namespace thehomebrewapi.Controllers
         /// persistent storage.
         /// </summary>
         [HttpPut("{id}", Name = "UpdateBrew")]
-        [ProducesResponseType(typeof(BrewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BrewFullAdditionalInfoDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -259,7 +272,7 @@ namespace thehomebrewapi.Controllers
             {
                 var links = CreateLinksForBrew(brewEntity.Id, includeAdditionalInfo);
 
-                var linkedResourceToReturn = _mapper.Map<BrewDto>(brewEntity)
+                var linkedResourceToReturn = _mapper.Map<BrewFullAdditionalInfoDto>(brewEntity)
                                                 .ShapeData(null) as IDictionary<string, object>;
 
                 linkedResourceToReturn.Add(this.LINKS, links);
@@ -321,7 +334,7 @@ namespace thehomebrewapi.Controllers
             {
                 var links = CreateLinksForBrew(brewEntity.Id, includeAdditionalInfo);
 
-                var linkedResourceToReturn = _mapper.Map<BrewDto>(brewEntity)
+                var linkedResourceToReturn = _mapper.Map<BrewFullAdditionalInfoDto>(brewEntity)
                                                 .ShapeData(null) as IDictionary<string, object>;
 
                 linkedResourceToReturn.Add(this.LINKS, links);

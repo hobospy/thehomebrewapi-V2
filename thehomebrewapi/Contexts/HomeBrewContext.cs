@@ -161,6 +161,14 @@ namespace thehomebrewapi.Contexts
                         Name = "Light crystal malt",
                         Amount = 150,
                         Unit = EUnitOfMeasure.gram
+                    },
+                    new Ingredient()
+                    {
+                        Id = 4,
+                        RecipeStepId = 5,
+                        Name = "Amarillo",
+                        Amount = 27.6,
+                        Unit = EUnitOfMeasure.gram
                     });
 
             modelBuilder.Entity<Brew>()

@@ -131,6 +131,14 @@ namespace thehomebrewapi.Migrations
                             Name = "Light crystal malt",
                             RecipeStepId = 2,
                             Unit = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Amount = 27.600000000000001,
+                            Name = "Amarillo",
+                            RecipeStepId = 5,
+                            Unit = 1
                         });
                 });
 

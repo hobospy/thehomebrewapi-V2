@@ -10,7 +10,7 @@ using thehomebrewapi.Contexts;
 namespace thehomebrewapi.Migrations
 {
     [DbContext(typeof(HomeBrewContext))]
-    [Migration("20210215005958_InitialMigration")]
+    [Migration("20220830081943_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,6 +132,14 @@ namespace thehomebrewapi.Migrations
                             Amount = 150.0,
                             Name = "Light crystal malt",
                             RecipeStepId = 2,
+                            Unit = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Amount = 27.600000000000001,
+                            Name = "Amarillo",
+                            RecipeStepId = 5,
                             Unit = 1
                         });
                 });

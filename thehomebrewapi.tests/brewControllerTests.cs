@@ -86,7 +86,7 @@ namespace thehomebrewapi.tests
         [Test]
         public void GetBrew_ValidId_ReturnsOk()
         {
-            var brewDto = new BrewDto()
+            var brewDto = new BrewFullAdditionalInfoDto()
             {
                 Id = _brew.Id,
                 Name = _brew.Name,
@@ -108,7 +108,7 @@ namespace thehomebrewapi.tests
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.Is<int>(i => i == VALID_ID), false)).Returns(_brew);
-            dataManipulationMock.Setup(dm => dm.ShapeData<BrewWithoutAdditionalInfoDto>(It.IsAny<BrewWithoutAdditionalInfoDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
+            dataManipulationMock.Setup(dm => dm.ShapeData<BrewDto>(It.IsAny<BrewDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
             DataManipulationExtensions.Implementation = dataManipulationMock.Object;
 
             var result = brewsController.GetBrew(VALID_ID, VALID_MEDIA_TYPE);
@@ -121,7 +121,7 @@ namespace thehomebrewapi.tests
         [Test]
         public void GetBrew_ValidIdNoTastingNotes_ReturnsOkWithBrewAndNoTastingNotes()
         {
-            var brewDto = new BrewDto()
+            var brewDto = new BrewFullAdditionalInfoDto()
             {
                 Id = _brew.Id,
                 Name = _brew.Name,
@@ -144,20 +144,20 @@ namespace thehomebrewapi.tests
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.Is<int>(i => i == VALID_ID), false)).Returns(_brew);
-            dataManipulationMock.Setup(dm => dm.ShapeData<BrewWithoutAdditionalInfoDto>(It.IsAny<BrewWithoutAdditionalInfoDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
+            dataManipulationMock.Setup(dm => dm.ShapeData<BrewDto>(It.IsAny<BrewDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
             DataManipulationExtensions.Implementation = dataManipulationMock.Object;
 
             var result = brewsController.GetBrew(VALID_ID, VALID_MEDIA_TYPE);
 
             var okObjectResult = result as OkObjectResult;
-            dataManipulationMock.Verify(dm => dm.ShapeData(It.IsAny<BrewWithoutAdditionalInfoDto>(), It.IsAny<string>()), Times.AtLeastOnce());
+            dataManipulationMock.Verify(dm => dm.ShapeData(It.IsAny<BrewDto>(), It.IsAny<string>()), Times.AtLeastOnce());
             Assert.AreEqual(expandoBrewDto, okObjectResult?.Value);
         }
 
         [Test]
         public void GetBrew_ValidIdTastingNotes_ReturnsOkWithBrewAndTastingNotes()
         {
-            var brewDto = new BrewDto()
+            var brewDto = new BrewFullAdditionalInfoDto()
             {
                 Id = _brew.Id,
                 Name = _brew.Name,
@@ -181,13 +181,13 @@ namespace thehomebrewapi.tests
             var brewsController = new BrewsController(homeBrewRepositoryMock.Object, mapperMock.Object, propertyMappingServiceMock.Object);
 
             homeBrewRepositoryMock.Setup(hbr => hbr.GetBrew(It.Is<int>(i => i == VALID_ID), true)).Returns(_brew);
-            dataManipulationMock.Setup(dm => dm.ShapeData<BrewDto>(It.IsAny<BrewDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
+            dataManipulationMock.Setup(dm => dm.ShapeData<BrewFullAdditionalInfoDto>(It.IsAny<BrewFullAdditionalInfoDto>(), It.IsAny<string>())).Returns(expandoBrewDto);
             DataManipulationExtensions.Implementation = dataManipulationMock.Object;
 
             var result = brewsController.GetBrew(VALID_ID, VALID_MEDIA_TYPE, true);
 
             var okObjectResult = result as OkObjectResult;
-            dataManipulationMock.Verify(dm => dm.ShapeData(It.IsAny<BrewDto>(), It.IsAny<string>()), Times.AtLeastOnce());
+            dataManipulationMock.Verify(dm => dm.ShapeData(It.IsAny<BrewFullAdditionalInfoDto>(), It.IsAny<string>()), Times.AtLeastOnce());
             Assert.AreEqual(expandoBrewDto, okObjectResult.Value);
         }
     }

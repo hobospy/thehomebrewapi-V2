@@ -59,7 +59,7 @@ namespace thehomebrewapi.Services
         public PropertyMappingService()
         {
             _propertyMappings.Add(new PropertyMapping<RecipeDto, Recipe>(_recipePropertyMapping));
-            _propertyMappings.Add(new PropertyMapping<BrewDto, Brew>(_brewPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<BrewFullAdditionalInfoDto, Brew>(_brewPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<WaterProfileDto, WaterProfile>(_waterProfilePropertyMapping));
             _propertyMappings.Add(new PropertyMapping<TastingNoteDto, TastingNote>(_tastingNotePropertyMapping));
         }

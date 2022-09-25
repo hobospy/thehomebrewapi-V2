@@ -28,7 +28,7 @@ namespace thehomebrewapi.Services
 
             var ingredients = new List<Ingredient>();
 
-            foreach(var step in recipe.Steps)
+            foreach (var step in recipe.Steps)
             {
                 ingredients.AddRange(_context.Ingredients.Where(i => i.RecipeStepId == step.Id).ToList());
             }
@@ -273,12 +273,21 @@ namespace thehomebrewapi.Services
                 collection = collection.Where(b => b.Rating >= brewsResourceParameters.MinRating);
             }
 
-            if (brewsResourceParameters.IncludeAdditionalInfo)
+            switch (brewsResourceParameters.IncludeAdditionalInfo)
             {
-                collection = collection.Include(b => b.TastingNotes)
-                                       .Include(b => b.Recipe.Steps).ThenInclude(s => s.Ingredients)
-                                       .Include(b => b.Recipe.Steps).ThenInclude(s => s.Timer)
-                                       .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions);
+                case ETypeOfAdditionalInfo.Basic:
+                    collection = collection.Include(b => b.Recipe);
+                    break;
+
+                case ETypeOfAdditionalInfo.Full:
+                    collection = collection.Include(b => b.TastingNotes)
+                                           .Include(b => b.Recipe.Steps).ThenInclude(s => s.Ingredients)
+                                           .Include(b => b.Recipe.Steps).ThenInclude(s => s.Timer)
+                                           .Include(b => b.Recipe.WaterProfile).ThenInclude(wp => wp.Additions);
+                    break;
+
+                default:
+                    break;
             }
 
             if (!string.IsNullOrWhiteSpace(brewsResourceParameters.SearchQuery))
@@ -293,7 +302,7 @@ namespace thehomebrewapi.Services
             if (!string.IsNullOrWhiteSpace(brewsResourceParameters.OrderBy))
             {
                 var brewPropertyMappingDictionary =
-                    _propertyMappingService.GetPropertyMapping<Models.BrewDto, Brew>();
+                    _propertyMappingService.GetPropertyMapping<Models.BrewFullAdditionalInfoDto, Brew>();
 
                 collection = collection.ApplySort(brewsResourceParameters.OrderBy,
                     brewPropertyMappingDictionary);
@@ -367,7 +376,7 @@ namespace thehomebrewapi.Services
 
             if (!string.IsNullOrWhiteSpace(tastingNotesResourceParameters.OrderBy))
             {
-                var tastingNotePropertyMappingDictionary = 
+                var tastingNotePropertyMappingDictionary =
                     _propertyMappingService.GetPropertyMapping<Models.TastingNoteDto, TastingNote>();
 
                 collection = collection.ApplySort(tastingNotesResourceParameters.OrderBy,
