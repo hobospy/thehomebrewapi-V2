@@ -1,11 +1,14 @@
 version: "3.9"
-services: 
+services:
   backend:
     # build: ./homebrewapi-image/
+    #build:
+    #    context: ../
+    #    dockerfile: "./thehomebrewapi"
     image: "homebrewapi-image"
     container_name: homebrewapi-nginx
     ports:
-      - "59607:59607"
+      - "59602:59602"
   frontend:
     image: nginx:alpine
     volumes:

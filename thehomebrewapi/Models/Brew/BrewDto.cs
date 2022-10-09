@@ -6,6 +6,7 @@ namespace thehomebrewapi.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Images { get; set; }
         public DateTime BrewDate { get; set; }
         public int BrewedState { get; set; }
         public string BrewingNotes { get; set; }

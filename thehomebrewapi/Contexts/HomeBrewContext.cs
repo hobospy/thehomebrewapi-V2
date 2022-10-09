@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using thehomebrewapi.Entities;
 using static thehomebrewapi.Entities.Enumerations;
 
@@ -177,6 +178,7 @@ namespace thehomebrewapi.Contexts
                     {
                         Id = 1,
                         RecipeId = 1,
+                        Images = "amber1.png",
                         ABV = 4.3,
                         BrewDate = new DateTime(2020, 11, 14),
                         BrewingNotes = "The yeast in this one didn't settle",
@@ -188,6 +190,7 @@ namespace thehomebrewapi.Contexts
                     {
                         Id = 2,
                         RecipeId = 1,
+                        Images = "amber2.png",
                         ABV = 4.1,
                         BrewDate = new DateTime(2021, 1, 19),
                         BrewedState = EBrewedState.notBrewed,

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
 using NLog.Web;
 using System;
 using System.IO;
@@ -47,7 +49,7 @@ namespace thehomebrewapi
                 // run the web app
                 host.Run();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, "Application stopped because of exception.");
                 throw;
@@ -63,14 +65,13 @@ namespace thehomebrewapi
             var config = new ConfigurationBuilder()
                                 .SetBasePath(Directory.GetCurrentDirectory())
                                 .AddJsonFile("appsettings.json", optional: false)
-                                .AddJsonFile("hostsettings.json", optional: true)
                                 .AddCommandLine(args)
                                 .Build();
 
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:5000");
+                    //webBuilder.UseUrls("http://*:5000");
                     webBuilder.UseConfiguration(config);
                     webBuilder.UseStartup<Startup>().UseNLog();
                 });

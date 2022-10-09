@@ -16,6 +16,9 @@ namespace thehomebrewapi.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
+        // Comma separated list of images
+        public string Images { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime BrewDate { get; set; }
 

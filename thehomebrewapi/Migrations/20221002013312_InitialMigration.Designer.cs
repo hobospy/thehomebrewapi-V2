@@ -10,7 +10,7 @@ using thehomebrewapi.Contexts;
 namespace thehomebrewapi.Migrations
 {
     [DbContext(typeof(HomeBrewContext))]
-    [Migration("20220830081943_InitialMigration")]
+    [Migration("20221002013312_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace thehomebrewapi.Migrations
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
+                    b.Property<string>("Images")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -66,6 +69,7 @@ namespace thehomebrewapi.Migrations
                             BrewDate = new DateTime(2020, 11, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             BrewedState = 2,
                             BrewingNotes = "The yeast in this one didn't settle",
+                            Images = "amber1.png",
                             Name = "First Brew",
                             Rating = 3.0,
                             RecipeId = 1
@@ -76,6 +80,7 @@ namespace thehomebrewapi.Migrations
                             ABV = 4.0999999999999996,
                             BrewDate = new DateTime(2021, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             BrewedState = 0,
+                            Images = "amber2.png",
                             Name = "Gonna be better brew",
                             Rating = 0.0,
                             RecipeId = 1
