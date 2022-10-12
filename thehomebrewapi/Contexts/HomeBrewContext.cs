@@ -178,7 +178,7 @@ namespace thehomebrewapi.Contexts
                     {
                         Id = 1,
                         RecipeId = 1,
-                        Images = "amber1.png",
+                        Images = "amber1.png,amber2.png",
                         ABV = 4.3,
                         BrewDate = new DateTime(2020, 11, 14),
                         BrewingNotes = "The yeast in this one didn't settle",
@@ -195,6 +195,18 @@ namespace thehomebrewapi.Contexts
                         BrewDate = new DateTime(2021, 1, 19),
                         BrewedState = EBrewedState.notBrewed,
                         Name = "Gonna be better brew"
+                    },
+                    new Brew()
+                    {
+                        Id = 3,
+                        RecipeId = 2,
+                        Images = "",
+                        ABV = 6.1,
+                        BrewDate = new DateTime(2022, 3, 30),
+                        BrewingNotes = "Used frozen raspberries to impart the raspberry flavour in the fermenter",
+                        BrewedState = EBrewedState.brewed,
+                        Name = "Raspberry Shadow",
+                        Rating = 4.2
                     }
                 );
 
